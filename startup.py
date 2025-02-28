@@ -17,7 +17,7 @@ def add_to_startup():
         log.writelog("Açılış komutları kontrol ediliyor.")
         # Eklenmesi gereken komutlar
         startup_commands = [
-            "sh /home/farma/setup.sh &\n"
+            "sh /home/farma/changeSystem.sh &\n"
         ]
 
         # Mevcut /etc/rc.local içeriğini oku
