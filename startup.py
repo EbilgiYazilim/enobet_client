@@ -46,3 +46,7 @@ def add_to_startup():
         log.writelog("Açılışa komutları kontrol edildi.")
     except Exception as e:
         log.writelog("Açılışa komutları eklenemedi: " + str(e))
+
+
+if __name__ == "__main__":
+    add_to_startup()
