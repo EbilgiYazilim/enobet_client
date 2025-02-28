@@ -1,5 +1,7 @@
 import os
 import subprocess
+import time
+
 from helpers import db
 from helpers import log
 
@@ -62,6 +64,7 @@ def disable_firefox_updates():
 def open_firefox_fullscreen():
     # Firefox'u tam ekran olarak açma
     try:
+        time.sleep(15)
         log.writelog("Firefox kiosk modda açılıyor.")
         subprocess.Popen(["xset", "-dpms"])
         subprocess.Popen(["xset", "s", "off"])
