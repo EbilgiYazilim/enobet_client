@@ -1,7 +1,5 @@
 import os
-import shutil
 import subprocess
-
 from helpers import db
 from helpers import log
 
