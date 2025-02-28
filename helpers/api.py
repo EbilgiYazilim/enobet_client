@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import requests
-import json
+from helpers import log
 
 
 def get_short_code(id):
@@ -13,7 +13,7 @@ def get_short_code(id):
             if response.get('data'):
                 extra_data = response.get('extraData', {})
                 if extra_data:
-                    print("Kısa kod: " + list(extra_data.values())[0])
+                    log.writelog("Kısa kod: " + list(extra_data.values())[0])
                     return list(extra_data.values())[0]
                 else:
                     return ""
@@ -22,5 +22,5 @@ def get_short_code(id):
         else:
             return ""
     except Exception as ee:
-        print(ee)
+        log.writelog(ee)
         return ""
