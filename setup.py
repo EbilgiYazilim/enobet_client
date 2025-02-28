@@ -92,6 +92,8 @@ def main():
                         db.write_config_json(crm_id, resultShortCode, CONFIG_JSON_PATH)
                     else:
                         log.writelog("Kısa kod alınamadı lütfen daha sonra tekrar deneyiniz.")
+                else:
+                    log.writelog("Dönen crm_id:" + str(crm_id))
         else:
             log.writelog("Uygulama kontrolünde hata oluştu.")
     except Exception as e:
