@@ -54,7 +54,7 @@ def main():
         if resultCheckApp:
             newSystemActive = os.path.exists(CONFIG_JSON_PATH)
             if newSystemActive:
-                subprocess.call(["python3", "/home/farma/enobet/nobet.py"])
+                subprocess.call(["python3", "/home/farma/enobet/firefox.sh"])
             else:
                 crm_id = db.get_crm_id(CONFIG_INI_PATH)
                 if crm_id > 0:
