@@ -31,7 +31,7 @@ def check_app():
         else:
             log.writelog("Güncellemeler kontrol ediliyor.")
             os.chdir(MASTER_PATH)
-            subprocess.call(["git", "reset", "--hard", "origin/main"])  # Yerel değişiklikleri sıfırla
+            #subprocess.call(["git", "reset", "--hard", "origin/main"])  # Yerel değişiklikleri sıfırla
             subprocess.call(["git", "pull", "origin", "main"])  # Güncellemeleri al
             log.writelog("Güncellemeler tamamlandı.")
             return True
