@@ -3,8 +3,7 @@
 
 import os
 import subprocess
-from helpers import log
-from helpers import db
+from helpers import log, db
 
 config = db.read_config_json()
 shortCode = config.get("shortCode")
