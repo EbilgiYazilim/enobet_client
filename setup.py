@@ -4,7 +4,7 @@
 import os
 import shutil
 import subprocess
-from helpers import log, db
+from helpers import log, db, api
 
 MASTER_PATH = "/home/farma/enobet/"
 CONFIG_INI_PATH = "/home/farma/nobet_ekran/config.ini"
@@ -84,7 +84,11 @@ def main():
             else:
                 crm_id = db.get_crm_id(CONFIG_INI_PATH)
                 if crm_id <= 0:
-                    db.write_config_json(crm_id, '', CONFIG_JSON_PATH)
+                    resultShortCode = api.get_short_code(crm_id)
+                    if len(resultShortCode) == 4:
+                        db.write_config_json(crm_id, resultShortCode, CONFIG_JSON_PATH)
+                    else:
+                        log.writelog("Kısa kod alınamadı lütfen daha sonra tekrar deneyiniz.")
         else:
             log.writelog("Uygulama kontrolünde hata oluştu.")
     except Exception as e:
