@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import requests
-import log
+from helpers import log
 
 
 def get_short_code(id):
