@@ -42,7 +42,7 @@ def add_to_startup():
         log.writelog("Açılış komutları kontrol ediliyor.")
         # Eklenmesi gereken komutlar
         startup_commands = [
-            "sh /home/farma/enobet.sh &\n"
+            "sh /home/farma/setup.sh &\n"
         ]
 
         # Mevcut /etc/rc.local içeriğini oku
