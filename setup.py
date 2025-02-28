@@ -86,7 +86,7 @@ def main():
                 os.system("sh /home/farma/nobet_ekran/nobetekran.sh")
             else:
                 crm_id = db.get_crm_id(CONFIG_INI_PATH)
-                if crm_id <= 0:
+                if crm_id > 0:
                     resultShortCode = api.get_short_code(crm_id)
                     if len(resultShortCode) == 4:
                         db.write_config_json(crm_id, resultShortCode, CONFIG_JSON_PATH)
