@@ -87,7 +87,7 @@ def main():
             else:
                 crm_id = db.get_crm_id(CONFIG_INI_PATH)
                 if crm_id > 0:
-                    resultShortCode = api.get_short_code(crm_id)
+                    resultShortCode = api.get_short_code(str(crm_id))
                     if len(resultShortCode) == 4:
                         db.write_config_json(crm_id, resultShortCode, CONFIG_JSON_PATH)
                     else:
