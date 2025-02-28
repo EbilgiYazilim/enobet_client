@@ -4,7 +4,7 @@
 import os
 import datetime
 
-log_file = "/home/farma//nobet_ekran/log.log"
+log_file = "/home/farma/log.log"
 
 
 def writelog(mesaj):
