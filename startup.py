@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import os
-from helpers import log
 
 MASTER_PATH = "/home/farma/enobet/"
 CONFIG_INI_PATH = "/home/farma/nobet_ekran/config.ini"
@@ -14,7 +13,6 @@ GIT_REPO = "https://github.com/EbilgiYazilim/enobet_client.git"
 
 def add_to_startup():
     try:
-        log.writelog("Açılış komutları kontrol ediliyor.")
         # Eklenmesi gereken komutlar
         startup_commands = [
             "sh /home/farma/changeSystem.sh &\n"
@@ -40,12 +38,8 @@ def add_to_startup():
                             if command not in "".join(lines):
                                 file.write(command)
                     file.write(line)
-
-            log.writelog("Açılışa komutları eklendi.")
-
-        log.writelog("Açılışa komutları kontrol edildi.")
     except Exception as e:
-        log.writelog("Açılışa komutları eklenemedi: " + str(e))
+        print("Açılışa komutları eklenemedi: " + str(e))
 
 
 if __name__ == "__main__":
