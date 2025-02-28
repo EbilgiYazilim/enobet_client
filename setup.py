@@ -48,26 +48,25 @@ def is_firefox_running():
 
 def main():
     try:
-        if not is_firefox_running:
-            subprocess.call(["sudo", "python3", "/home/farma/enobet/startup.py"])
+        subprocess.call(["sudo", "python3", "/home/farma/enobet/startup.py"])
 
-            resultCheckApp = check_app()
-            if resultCheckApp:
-                newSystemActive = os.path.exists(CONFIG_JSON_PATH)
-                if newSystemActive:
-                    subprocess.call(["python3", "/home/farma/enobet/nobet.py"])
-                else:
-                    crm_id = db.get_crm_id(CONFIG_INI_PATH)
-                    if crm_id > 0:
-                        resultShortCode = api.get_short_code(str(crm_id))
-                        if len(resultShortCode) == 4:
-                            db.write_config_json(crm_id, resultShortCode, CONFIG_JSON_PATH)
-                        else:
-                            log.writelog("Kısa kod alınamadı lütfen daha sonra tekrar deneyiniz.")
-                    else:
-                        log.writelog("Dönen crm_id:" + str(crm_id))
+        resultCheckApp = check_app()
+        if resultCheckApp:
+            newSystemActive = os.path.exists(CONFIG_JSON_PATH)
+            if newSystemActive:
+                subprocess.call(["python3", "/home/farma/enobet/nobet.py"])
             else:
-                log.writelog("Uygulama kontrolünde hata oluştu.")
+                crm_id = db.get_crm_id(CONFIG_INI_PATH)
+                if crm_id > 0:
+                    resultShortCode = api.get_short_code(str(crm_id))
+                    if len(resultShortCode) == 4:
+                        db.write_config_json(crm_id, resultShortCode, CONFIG_JSON_PATH)
+                    else:
+                        log.writelog("Kısa kod alınamadı lütfen daha sonra tekrar deneyiniz.")
+                else:
+                    log.writelog("Dönen crm_id:" + str(crm_id))
+        else:
+            log.writelog("Uygulama kontrolünde hata oluştu.")
 
     except Exception as e:
         log.writelog("Teknik bir hata meydana geldi: " + str(e))
