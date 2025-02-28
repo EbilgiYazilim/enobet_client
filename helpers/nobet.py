@@ -3,7 +3,6 @@
 
 import os
 import subprocess
-
 from helpers import log
 from helpers import db
 
@@ -80,6 +79,6 @@ def open_firefox_fullscreen():
 if __name__ == "__main__":
     log.writelog("firefox işlemleri başladı")
     # Set homepage, disable updates, and open Firefox fullscreen
-    # set_firefox_homepage()  # Uncomment to enable homepage set
-    # disable_firefox_updates()  # Uncomment to disable updates
+    set_firefox_homepage()  # Uncomment to enable homepage set
+    disable_firefox_updates()  # Uncomment to disable updates
     open_firefox_fullscreen()  # Uncomment to open Firefox in fullscreen mode

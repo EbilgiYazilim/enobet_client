@@ -36,12 +36,12 @@ def write_config_json(crm_id, short_code, json_path):
 
 
 def read_config_json():
-    json_path = "/home/farma/nobet_ekran/config.json"
+    json_path = "/home/farma/enobet/config.json"
 
     if os.path.exists(json_path):
         with open(json_path, "r", encoding="utf-8") as json_file:
             data = json.load(json_file)
             return data
     else:
-        print("Json dosyası bulunamadı.")
+        log.writelog("Json dosyası bulunamadı.")
         return None
