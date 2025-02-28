@@ -10,8 +10,10 @@ def get_short_code(id):
         req = requests.post("https://api.e-nobet.com/api/Client/GetClientInfoFromOldSystem?id=" + id)
         if req.status_code == 200:
             response = req.json()
+            log.writelog("API'den dönen yanıt: " + str(response))
             if response.get('data'):
                 extra_data = response.get('extraData', {})
+                log.writelog("API'den dönen extradata: " + str(extra_data))
                 if extra_data:
                     log.writelog("Kısa kod: " + list(extra_data.values())[0])
                     return list(extra_data.values())[0]
