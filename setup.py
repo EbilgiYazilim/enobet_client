@@ -83,7 +83,7 @@ def main():
         if resultCheckApp:
             newSystemActive = os.path.exists(CONFIG_JSON_PATH)
             if newSystemActive:
-                os.system("sh /home/farma/nobet_ekran/nobetekran.sh")
+                os.system("sh /home/farma/enobet/nobetekran.sh")
             else:
                 crm_id = db.get_crm_id(CONFIG_INI_PATH)
                 if crm_id > 0:
