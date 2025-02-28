@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 
 import os
+import shutil
 import subprocess
 
-from helpers import api
 from helpers import log
 from helpers import db
 
