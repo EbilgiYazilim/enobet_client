@@ -5,9 +5,9 @@ import os
 import shutil
 import subprocess
 
-import helpers.api as api
-import helpers.db as db
-import helpers.log as log
+from helpers import api
+from helpers import log
+from helpers import db
 
 MASTER_PATH = "/home/farma/enobet/"
 CONFIG_INI_PATH = "/home/farma/nobet_ekran/config.ini"

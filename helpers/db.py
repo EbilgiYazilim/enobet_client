@@ -4,7 +4,7 @@
 import os
 import configparser
 import json
-import log
+from helpers import log
 
 
 def get_crm_id(config_path):
