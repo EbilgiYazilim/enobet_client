@@ -15,12 +15,11 @@ SCREENSHOT_PATH = os.path.join(DOWNLOAD_DIR, "screenshot.png")
 
 
 def clean_directories():
-    if os.path.exists(DOWNLOAD_DIR):
-        shutil.rmtree(DOWNLOAD_DIR)
+    if os.path.exists(ARCHIVE_PATH):
+        os.remove(ARCHIVE_PATH)
     if os.path.exists(EXTRACT_DIR):
         shutil.rmtree(EXTRACT_DIR)
 
-    os.makedirs(DOWNLOAD_DIR, exist_ok=True)
     os.makedirs(EXTRACT_DIR, exist_ok=True)
 
 
