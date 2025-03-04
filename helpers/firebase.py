@@ -20,15 +20,20 @@ def get_firestore_documents():
 def listen_firestore(interval=10):
     log.writelog("firebase dinlemesi başladı.")
     while True:
-        docs = get_firestore_documents()
-        if docs:
-            latest_doc = docs[-1]
-            document_id = latest_doc["name"].split("/")[-1]
-            log.writelog(document_id)
-            requests.delete(BASE_URL + document_id)
+        try:
+            docs = get_firestore_documents()
+            if docs:
+                latest_doc = docs[-1]
+                document_id = latest_doc["name"].split("/")[-1]
+                log.writelog(document_id)
+                requests.delete(BASE_URL + document_id)
 
-            commandId = latest_doc["Command"]
+                fields = latest_doc["fields"]
+                data = json.load(fields)
+                commandId = int(data["Command"]["integerValue"])
 
-            log.writelog("Gelen komut ID: " + commandId)
+                log.writelog("Gelen komut ID: " + str(commandId))
+        except Exception as e:
+            log.writelog(str(e))
 
         time.sleep(interval)
