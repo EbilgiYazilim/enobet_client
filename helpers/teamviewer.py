@@ -4,11 +4,10 @@
 import base64
 import os
 import subprocess
-import shutil
 import requests
 
 TEAMVIEWER_URL = "https://cdn.e-nobet.com/app/teamviewer_qs.tar.gz"
-DOWNLOAD_DIR = "/home/downloads/"
+DOWNLOAD_DIR = "/home/Downloads/"
 EXTRACT_DIR = "/home/teamqs/"
 ARCHIVE_PATH = os.path.join(DOWNLOAD_DIR, "teamviewer.tar.gz")
 SCREENSHOT_PATH = os.path.join(DOWNLOAD_DIR, "screenshot.png")
