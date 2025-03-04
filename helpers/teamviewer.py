@@ -26,16 +26,23 @@ def clean_directories():
 
 
 def download_teamviewer():
-    subprocess.run(["wget", "-O", ARCHIVE_PATH, TEAMVIEWER_URL])
+    subprocess.run(["wget", "-O", ARCHIVE_PATH, TEAMVIEWER_URL], check=True)
 
 
 def extract_teamviewer():
-    subprocess.run(["tar", "-xzf", ARCHIVE_PATH, "-C", EXTRACT_DIR])
+    if not os.path.exists(ARCHIVE_PATH):
+        raise FileNotFoundError("Dosya indirilemedi: " + ARCHIVE_PATH)
+
+    subprocess.run(["tar", "-xzf", ARCHIVE_PATH, "-C", EXTRACT_DIR], check=True)
 
 
 def run_teamviewer():
     teamviewer_path = os.path.join(EXTRACT_DIR, "teamviewer11")
-    subprocess.run([teamviewer_path])
+
+    if not os.path.exists(teamviewer_path):
+        raise FileNotFoundError("Çalıştırılabilir dosya bulunamadı: " + teamviewer_path)
+
+    subprocess.run([teamviewer_path], check=True)
 
 
 def capture_screenshot():
@@ -52,8 +59,7 @@ def capture_screenshot():
             params = {"id": "F4A7CED7-D2EB-419E-9F5D-002723F81645", "screenshot": base64_string}
             requests.post("https://api.e-nobet.com/api/Client/SaveScreenshot", json=params)
     except Exception as e:
-        print("Failed to capture screenshot")
-        # log.writelog("Ekran görüntüsü işleminde hata: " + str(e))
+        print("Failed to capture screenshot:", e)
 
 
 def main():
