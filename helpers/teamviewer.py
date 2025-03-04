@@ -27,7 +27,7 @@ def clean_directories():
 
 def download_teamviewer():
     try:
-        subprocess.run(["wget", ARCHIVE_PATH, TEAMVIEWER_URL], check=True)
+        subprocess.run(["wget", "-P", ARCHIVE_PATH, TEAMVIEWER_URL], check=True)
     except Exception as e:
         print(e)
 
