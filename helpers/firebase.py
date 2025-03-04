@@ -14,7 +14,7 @@ last_seen_doc_create_time = None
 
 def get_firestore_documents():
     response = requests.get(BASE_URL)
-    log.writelog("get_firestore_documents response: " + str(response))
+    log.writelog("get_firestore_documents response: " + str(response.json()))
     if response.status_code == 200:
         return response.json().get("documents", [])
     return []
