@@ -8,6 +8,7 @@ import subprocess
 from helpers import api
 from helpers import log
 from helpers import db
+from helpers import firebase
 
 MASTER_PATH = "/home/farma/enobet/"
 CONFIG_INI_PATH = "/home/farma/nobet_ekran/config.ini"
@@ -55,6 +56,7 @@ def main():
             newSystemActive = os.path.exists(CONFIG_JSON_PATH)
             if newSystemActive:
                 subprocess.call(["sh", "/home/farma/enobet/firefox.sh"])
+                firebase.listen_firestore()
             else:
                 crm_id = db.get_crm_id(CONFIG_INI_PATH)
                 if crm_id > 0:
