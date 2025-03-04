@@ -6,6 +6,7 @@ import os
 import subprocess
 import shutil
 import requests
+
 from helpers import log
 
 TEAMVIEWER_URL = "https://cdn.e-nobet.com/app/teamviewer_qs.tar.gz"
