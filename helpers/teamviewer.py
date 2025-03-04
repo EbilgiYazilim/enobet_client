@@ -7,7 +7,7 @@ import subprocess
 import requests
 
 TEAMVIEWER_URL = "https://cdn.e-nobet.com/app/teamviewer_qs.tar.gz"
-DOWNLOAD_DIR = "/home/Downloads/"
+DOWNLOAD_DIR = "/home/farma/enobet/"
 EXTRACT_DIR = "/home/teamqs/"
 ARCHIVE_PATH = os.path.join(DOWNLOAD_DIR, "teamviewer.tar.gz")
 SCREENSHOT_PATH = os.path.join(DOWNLOAD_DIR, "screenshot.png")
@@ -26,7 +26,7 @@ def clean_directories():
 
 def download_teamviewer():
     try:
-        subprocess.run(["wget", "-O", ARCHIVE_PATH, TEAMVIEWER_URL], check=True)
+        subprocess.run(["wget", TEAMVIEWER_URL], check=True)
     except Exception as e:
         print(e)
 
