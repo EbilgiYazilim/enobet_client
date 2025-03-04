@@ -2,6 +2,8 @@ import requests
 import json
 import time
 
+from helpers import log
+
 with open("/home/farma/enobet/helpers/firebasekey.json") as f:
     creds = json.load(f)
 
@@ -14,6 +16,7 @@ def get_access_token():
     }
     headers = {"Content-Type": "application/json"}
     response = requests.post(url, json=payload, headers=headers)
+    log.writelog("token response" + str(response.text))
     return response.json().get("access_token", "")
 
 
@@ -38,6 +41,7 @@ def get_firestore_documents():
 
 
 def listen_firestore(interval=10):
+    log.writelog("firebase dinlemesi başladı.")
     global last_seen_doc
     while True:
         docs = get_firestore_documents()

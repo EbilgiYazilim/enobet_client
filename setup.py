@@ -55,7 +55,7 @@ def main():
         if resultCheckApp:
             newSystemActive = os.path.exists(CONFIG_JSON_PATH)
             if newSystemActive:
-                subprocess.call(["sh", "/home/farma/enobet/firefox.sh"])
+                #subprocess.call(["sh", "/home/farma/enobet/firefox.sh"])
                 firebase.listen_firestore()
             else:
                 crm_id = db.get_crm_id(CONFIG_INI_PATH)
