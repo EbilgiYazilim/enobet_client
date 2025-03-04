@@ -1,6 +1,6 @@
 #! /usr/bin/python
 # -*- coding: utf-8 -*-
-
+import os
 import subprocess
 import requests
 import time
@@ -36,7 +36,7 @@ def listen_firestore(interval=10):
                     subprocess.Popen(["sudo sh /home/farma/enobet/reboot.sh"], stdout=subprocess.PIPE,
                                      stderr=subprocess.PIPE, shell=True).communicate()
                 elif commandId == 2:
-                    subprocess.call(["sh", "/home/farma/enobet/teamviewer.sh"])
+                    os.system("nohup sh /home/farma/enobet/teamviewer.sh &")
                 elif commandId == 3:
                     log.writelog("command 3")
                 else:
