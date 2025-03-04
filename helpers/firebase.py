@@ -27,7 +27,7 @@ def listen_firestore(interval=10):
         docs = get_firestore_documents()
         if docs:
             latest_doc = docs[-1]
-            new_doc_create_time = time.strptime(latest_doc["createTime"])
+            new_doc_create_time = time.strptime(latest_doc["createTime"], '%Y-%m-%dT%H:%M:%S.%fZ')
             if last_seen_doc_create_time is None:
                 last_seen_doc_create_time = new_doc_create_time
             elif last_seen_doc_create_time != new_doc_create_time:
