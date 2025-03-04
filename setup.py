@@ -60,7 +60,7 @@ def main():
             if crm_id > 0:
                 resultShortCode = api.get_short_code(str(crm_id))
                 if len(resultShortCode) == 4:
-                    resultClientCode = api.get_client_code(str(resultShortCode))
+                    resultClientCode = api.get_client_code(resultShortCode)
                     if len(resultClientCode) > 10:
                         db.write_config_json(crm_id, resultShortCode, resultClientCode, CONFIG_JSON_PATH)
                     else:

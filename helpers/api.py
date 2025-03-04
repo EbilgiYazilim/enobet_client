@@ -27,7 +27,7 @@ def get_short_code(id):
 
 def get_client_code(shortcode):
     try:
-        req = requests.post("https://api.e-nobet.com/api/Client/GetDeviceLink/" + shortcode)
+        req = requests.get("https://api.e-nobet.com/api/Client/GetDeviceLink/" + shortcode)
         if req.status_code == 200:
             response = req.json()
             log.writelog(response)
