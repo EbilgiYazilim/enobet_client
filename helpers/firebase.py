@@ -1,3 +1,5 @@
+import subprocess
+
 import requests
 import json
 import time
@@ -27,10 +29,19 @@ def listen_firestore(interval=10):
                 document_id = latest_doc["name"].split("/")[-1]
                 log.writelog(document_id)
                 requests.delete(BASE_URL + document_id)
-
                 commandId = int(latest_doc["fields"]["Command"]["integerValue"])
 
-                log.writelog("Gelen komut ID: " + str(commandId))
+                # Reboot PC
+                if commandId == 1:
+                    subprocess.Popen(["sudo sh /home/farma/enobet/reboot.sh"], stdout=subprocess.PIPE,
+                                     stderr=subprocess.PIPE, shell=True).communicate()
+                elif commandId == 2:
+                    log.writelog("command 2")
+                elif commandId == 3:
+                    log.writelog("command 3")
+                else:
+                    log.writelog("unknown command")
+
         except Exception as e:
             log.writelog(str(e))
 
