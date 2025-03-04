@@ -56,7 +56,8 @@ def capture_screenshot():
 
             os.remove(SCREENSHOT_PATH)
             params = {"id": "F4A7CED7-D2EB-419E-9F5D-002723F81645", "screenshot": base64_string}
-            requests.post("https://api.e-nobet.com/api/Client/SaveScreenshot", json=params)
+            response = requests.post("https://api.e-nobet.com/api/Client/SaveScreenshot", json=params)
+            print(response.json())
     except Exception as e:
         print("Failed to capture screenshot:", e)
 
