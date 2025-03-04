@@ -26,3 +26,16 @@ def get_short_code(id):
     except Exception as ee:
         log.writelog(ee)
         return ""
+
+
+def get_client_code(shortcode):
+    try:
+        req = requests.post("https://api.e-nobet.com/api/Client/GetDeviceLink/" + shortcode)
+        if req.status_code == 200:
+            response = req.json()
+            return response['data']
+        else:
+            return ""
+    except Exception as ee:
+        log.writelog(ee)
+        return ""

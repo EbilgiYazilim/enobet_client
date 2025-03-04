@@ -22,10 +22,10 @@ def get_crm_id(config_path):
     return int(crm_id)
 
 
-def write_config_json(crm_id, short_code, json_path):
+def write_config_json(crm_id, short_code, client_code, json_path):
     try:
         log.writelog("config.json yazılıyor.")
-        config_json_data = {"oldCrmId": crm_id, "shortCode": short_code}
+        config_json_data = {"oldCrmId": crm_id, "shortCode": short_code, "clientCode": client_code}
 
         with open(json_path, "w") as json_file:
             json.dump(config_json_data, json_file, indent=4)

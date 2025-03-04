@@ -4,10 +4,13 @@ import os
 import subprocess
 import requests
 import time
-from helpers import log
+from helpers import log, db
+
+config = db.read_config_json()
+clientCode = config.get("clientCode")
 
 PROJECT_ID = "nobetekranlari"
-CLIENT_ID = "F4A7CED7-D2EB-419E-9F5D-002723F81645"
+CLIENT_ID = clientCode
 BASE_URL = ("https://firestore.googleapis.com/v1/projects/nobetekranlari/databases/("
             "default)/documents/Clients/F4A7CED7-D2EB-419E-9F5D-002723F81645/ClientCommands/")
 

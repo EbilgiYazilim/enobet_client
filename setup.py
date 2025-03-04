@@ -13,8 +13,6 @@ from helpers import firebase
 MASTER_PATH = "/home/farma/enobet/"
 CONFIG_INI_PATH = "/home/farma/nobet_ekran/config.ini"
 CONFIG_JSON_PATH = os.path.join(MASTER_PATH, "config.json")
-VERSION_URL = "https://cdn.e-nobet.com/updates/version.json"
-RC_LOCAL_PATH = "/etc/rc.local"
 GIT_REPO = "https://github.com/EbilgiYazilim/enobet_client.git"
 
 
@@ -42,24 +40,31 @@ def check_app():
 
 
 def is_firefox_running():
-    """Firefox'un çalışıp çalışmadığını kontrol eder."""
-    check_command = "ps aux | grep firefox | grep -v grep"
-    return os.system(check_command) == 0  # Eğer 0 dönerse Firefox çalışıyor demektir
+    result = subprocess.run(["pgrep", "-f", "firefox"], stdout=subprocess.PIPE)
+    return result.returncode == 0
 
 
 def main():
     try:
+        if is_firefox_running():
+            return
+
         subprocess.call(["sudo", "python3", "/home/farma/enobet/startup.py"])
         newSystemActive = os.path.exists(CONFIG_JSON_PATH)
         if newSystemActive:
-            # subprocess.call(["sh", "/home/farma/enobet/firefox.sh"])
+            subprocess.Popen(["sh", "/home/farma/enobet/nobet.py"], stdout=subprocess.DEVNULL,
+                             stderr=subprocess.DEVNULL)
             firebase.listen_firestore()
         else:
             crm_id = db.get_crm_id(CONFIG_INI_PATH)
             if crm_id > 0:
                 resultShortCode = api.get_short_code(str(crm_id))
                 if len(resultShortCode) == 4:
-                    db.write_config_json(crm_id, resultShortCode, CONFIG_JSON_PATH)
+                    resultClientCode = api.get_client_code(str(resultShortCode))
+                    if len(resultClientCode) > 10:
+                        db.write_config_json(crm_id, resultShortCode, resultClientCode, CONFIG_JSON_PATH)
+                    else:
+                        log.writelog("Client kod alınamadı lütfen daha sonra tekrar deneyiniz.")
                 else:
                     log.writelog("Kısa kod alınamadı lütfen daha sonra tekrar deneyiniz.")
             else:

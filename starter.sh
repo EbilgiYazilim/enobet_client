@@ -2,6 +2,8 @@
 
 MASTER_PATH="/home/farma/enobet"
 
+sudo rm -f /home/farma/log.log /home/farma/enobet/nohup.out
+
 if [ ! -d "$MASTER_PATH/.git" ]; then
     echo "Uygulama bulunamadı, klonlanıyor..."
     git clone https://github.com/EbilgiYazilim/enobet_client.git "$MASTER_PATH"

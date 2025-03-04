@@ -5,8 +5,12 @@ import base64
 import os
 import subprocess
 import time
-
 import requests
+
+from helpers import db
+
+config = db.read_config_json()
+clientCode = config.get("clientCode")
 
 TEAMVIEWER_URL = "https://cdn.e-nobet.com/app/teamviewer_qs.tar.gz"
 DOWNLOAD_DIR = "/home/farma/enobet/"
@@ -65,7 +69,7 @@ def capture_screenshot():
                 base64_string = base64.b64encode(image_file.read()).decode("utf-8")
 
             os.remove(SCREENSHOT_PATH)
-            params = {"id": "F4A7CED7-D2EB-419E-9F5D-002723F81645", "screenshot": "image/png," + base64_string}
+            params = {"id": clientCode, "screenshot": "image/png," + base64_string}
             response = requests.post("https://api.e-nobet.com/api/Client/SaveScreenshot", json=params)
             print(response.json())
     except Exception as e:
