@@ -1,21 +1,14 @@
 #! /usr/bin/python
 # -*- coding: utf-8 -*-
 
-import os
-
-MASTER_PATH = "/home/farma/enobet/"
-CONFIG_INI_PATH = "/home/farma/nobet_ekran/config.ini"
-CONFIG_JSON_PATH = os.path.join(MASTER_PATH, "config.json")
-VERSION_URL = "https://cdn.e-nobet.com/updates/version.json"
-RC_LOCAL_PATH = "/etc/rc.local"
-GIT_REPO = "https://github.com/EbilgiYazilim/enobet_client.git"
-
 
 def add_to_startup():
     try:
+        RC_LOCAL_PATH = "/etc/rc.local"
+
         # Eklenmesi gereken komutlar
         startup_commands = [
-            "sh /home/farma/changeSystem.sh &\n"
+            "sh /home/farma/enobet/starter.sh &\n"
         ]
 
         # Mevcut /etc/rc.local içeriğini oku
