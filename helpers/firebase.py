@@ -28,9 +28,7 @@ def listen_firestore(interval=10):
                 log.writelog(document_id)
                 requests.delete(BASE_URL + document_id)
 
-                fields = latest_doc["fields"]
-                data = json.load(fields)
-                commandId = int(data["Command"]["integerValue"])
+                commandId = int(latest_doc["fields"]["Command"]["integerValue"])
 
                 log.writelog("Gelen komut ID: " + str(commandId))
         except Exception as e:
