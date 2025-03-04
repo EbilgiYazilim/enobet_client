@@ -8,8 +8,8 @@ import shutil
 import requests
 
 TEAMVIEWER_URL = "https://cdn.e-nobet.com/app/teamviewer_qs.tar.gz"
-DOWNLOAD_DIR = "/home/downloads"
-EXTRACT_DIR = "/home/teamqs"
+DOWNLOAD_DIR = "/home/downloads/"
+EXTRACT_DIR = "/home/teamqs/"
 ARCHIVE_PATH = os.path.join(DOWNLOAD_DIR, "teamviewer.tar.gz")
 SCREENSHOT_PATH = os.path.join(DOWNLOAD_DIR, "screenshot.png")
 
