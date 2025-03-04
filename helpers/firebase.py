@@ -2,7 +2,7 @@ import requests
 import json
 import time
 
-with open("../firebasekey.json") as f:
+with open("firebasekey.json") as f:
     creds = json.load(f)
 
 
