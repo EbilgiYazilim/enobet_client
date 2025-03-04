@@ -27,9 +27,9 @@ def listen_firestore(interval=10):
         docs = get_firestore_documents()
         if docs:
             latest_doc = docs[-1]
-            new_doc_create_time = time.mktime(latest_doc["createTime"].timetuple())
+            new_doc_create_time = time.strptime(latest_doc["createTime"])
             if last_seen_doc_create_time is None:
-                last_seen_doc_create_time = time.mktime(latest_doc["createTime"].timetuple())
+                last_seen_doc_create_time = new_doc_create_time
             elif last_seen_doc_create_time != new_doc_create_time:
                 print("Yeni kayıt eklendi:", latest_doc["fields"])
                 last_seen_doc_create_time = new_doc_create_time
