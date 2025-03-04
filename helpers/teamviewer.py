@@ -8,7 +8,7 @@ import requests
 
 TEAMVIEWER_URL = "https://cdn.e-nobet.com/app/teamviewer_qs.tar.gz"
 DOWNLOAD_DIR = "/home/farma/enobet/"
-EXTRACT_DIR = "/home/teamqs/"
+EXTRACT_DIR = "/home/farma/enobet/"
 ARCHIVE_PATH = os.path.join(DOWNLOAD_DIR, "teamviewer_qs.tar.gz")
 SCREENSHOT_PATH = os.path.join(DOWNLOAD_DIR, "screenshot.png")
 
