@@ -9,6 +9,7 @@ import requests
 TEAMVIEWER_URL = "https://cdn.e-nobet.com/app/teamviewer_qs.tar.gz"
 DOWNLOAD_DIR = "/home/farma/enobet/"
 EXTRACT_DIR = "/home/farma/enobet/"
+TEAMVIEWER_DIR = os.path.join(EXTRACT_DIR, "teamviewerqs")
 ARCHIVE_PATH = os.path.join(DOWNLOAD_DIR, "teamviewer_qs.tar.gz")
 SCREENSHOT_PATH = os.path.join(DOWNLOAD_DIR, "screenshot.png")
 
@@ -16,6 +17,7 @@ SCREENSHOT_PATH = os.path.join(DOWNLOAD_DIR, "screenshot.png")
 def clean_directories():
     if os.path.exists(ARCHIVE_PATH):
         subprocess.run(["sudo", "rm", "-f", ARCHIVE_PATH], check=True)
+        subprocess.run(["sudo", "rm", "-f", TEAMVIEWER_DIR], check=True)
 
 
 def download_teamviewer():
@@ -33,7 +35,7 @@ def extract_teamviewer():
 
 
 def run_teamviewer():
-    teamviewer_path = os.path.join(EXTRACT_DIR, "teamviewer11")
+    teamviewer_path = os.path.join(TEAMVIEWER_DIR, "teamviewer")
 
     if not os.path.exists(teamviewer_path):
         raise FileNotFoundError("Çalıştırılabilir dosya bulunamadı: " + teamviewer_path)
