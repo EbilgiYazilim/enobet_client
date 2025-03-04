@@ -26,7 +26,7 @@ def clean_directories():
 
 
 def download_teamviewer():
-    subprocess.run(["wget", "-O", ARCHIVE_PATH, TEAMVIEWER_URL], check=True)
+    subprocess.run(["wget", ARCHIVE_PATH, TEAMVIEWER_URL], check=True)
 
 
 def extract_teamviewer():
