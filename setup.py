@@ -49,10 +49,10 @@ def main():
         if is_firefox_running():
             return
 
-        subprocess.call(["sudo", "python3", "/home/farma/enobet/startup.py"])
+        subprocess.call(["sudo", "python3", "/home/farma/enobet/helpers/startup.py"])
         newSystemActive = os.path.exists(CONFIG_JSON_PATH)
         if newSystemActive:
-            subprocess.Popen(["sh", "/home/farma/enobet/nobet.py"], stdout=subprocess.DEVNULL,
+            subprocess.Popen(["sh", "/home/farma/enobet/helpers/nobet.py"], stdout=subprocess.DEVNULL,
                              stderr=subprocess.DEVNULL)
             firebase.listen_firestore()
         else:
