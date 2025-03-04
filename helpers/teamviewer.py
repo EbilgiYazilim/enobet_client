@@ -38,7 +38,6 @@ def extract_teamviewer():
 
 
 def run_teamviewer():
-    subprocess.run("sudo chmod -R +x /home/farma/enobet/")
     teamviewer_path = os.path.join(TEAMVIEWER_DIR, "teamviewer")
 
     if not os.path.exists(teamviewer_path):
