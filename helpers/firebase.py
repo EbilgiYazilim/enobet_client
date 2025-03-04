@@ -20,7 +20,8 @@ def get_access_token():
 ACCESS_TOKEN = get_access_token()
 PROJECT_ID = "nobetekranlari"
 CLIENT_ID = "F4A7CED7-D2EB-419E-9F5D-002723F81645"
-BASE_URL = f"https://firestore.googleapis.com/v1/projects/nobetekranlari/databases/(default)/documents/Clients/{CLIENT_ID}/ClientCommands/"
+BASE_URL = ("https://firestore.googleapis.com/v1/projects/nobetekranlari/databases/("
+            "default)/documents/Clients/F4A7CED7-D2EB-419E-9F5D-002723F81645/ClientCommands/")
 HEADERS = {
     "Authorization": "Bearer " + ACCESS_TOKEN,
     "Content-Type": "application/json"
