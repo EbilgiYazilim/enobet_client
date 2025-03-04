@@ -4,37 +4,17 @@ import time
 
 from helpers import log
 
-with open("/home/farma/enobet/helpers/firebasekey.json") as f:
-    creds = json.load(f)
-
-
-def get_access_token():
-    url = "https://www.googleapis.com/oauth2/v4/token"
-    payload = {
-        "grant_type": "urn:ietf:params:oauth:grant-type:jwt-bearer",
-        "assertion": creds["private_key_id"]
-    }
-    headers = {"Content-Type": "application/json"}
-    response = requests.post(url, json=payload, headers=headers)
-    log.writelog("token response" + str(response.text))
-    return response.json().get("access_token", "")
-
-
-ACCESS_TOKEN = get_access_token()
 PROJECT_ID = "nobetekranlari"
 CLIENT_ID = "F4A7CED7-D2EB-419E-9F5D-002723F81645"
 BASE_URL = ("https://firestore.googleapis.com/v1/projects/nobetekranlari/databases/("
             "default)/documents/Clients/F4A7CED7-D2EB-419E-9F5D-002723F81645/ClientCommands/")
-HEADERS = {
-    "Authorization": "Bearer " + ACCESS_TOKEN,
-    "Content-Type": "application/json"
-}
 
 last_seen_doc = None
 
 
 def get_firestore_documents():
-    response = requests.get(BASE_URL, headers=HEADERS)
+    response = requests.get(BASE_URL)
+    log.writelog("get_firestore_documents response: " + str(response))
     if response.status_code == 200:
         return response.json().get("documents", [])
     return []
