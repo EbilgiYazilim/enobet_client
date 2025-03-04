@@ -17,12 +17,6 @@ def clean_directories():
     if os.path.exists(ARCHIVE_PATH):
         subprocess.run(["sudo", "rm", "-f", ARCHIVE_PATH], check=True)
 
-    if os.path.exists(EXTRACT_DIR):
-        subprocess.run(["sudo", "rm", "-rf", EXTRACT_DIR], check=True)
-
-    subprocess.run(["sudo", "mkdir", "-p", EXTRACT_DIR], check=True)
-    subprocess.run(["sudo", "chmod", "777", EXTRACT_DIR], check=True)
-
 
 def download_teamviewer():
     try:
