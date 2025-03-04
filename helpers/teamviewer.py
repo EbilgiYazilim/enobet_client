@@ -11,6 +11,7 @@ import requests
 TEAMVIEWER_URL = "https://cdn.e-nobet.com/app/teamviewer_qs.tar.gz"
 DOWNLOAD_DIR = "/home/farma/enobet/"
 EXTRACT_DIR = "/home/farma/enobet/"
+TEAMVIEWER_PROCESS = "TeamViewer"
 TEAMVIEWER_DIR = os.path.join(EXTRACT_DIR, "teamviewerqs")
 ARCHIVE_PATH = os.path.join(DOWNLOAD_DIR, "teamviewer_qs.tar.gz")
 SCREENSHOT_PATH = os.path.join(DOWNLOAD_DIR, "screenshot.png")
@@ -46,8 +47,16 @@ def run_teamviewer():
     subprocess.Popen([teamviewer_path], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 
+def is_teamviewer_running():
+    result = subprocess.run(["pgrep", "-f", TEAMVIEWER_PROCESS], stdout=subprocess.PIPE)
+    return result.returncode == 0
+
+
 def capture_screenshot():
     try:
+        while not is_teamviewer_running():
+            time.sleep(1)
+
         subprocess.run(["scrot", SCREENSHOT_PATH])
 
         if os.path.exists(SCREENSHOT_PATH):
@@ -67,7 +76,6 @@ def main():
     download_teamviewer()
     extract_teamviewer()
     run_teamviewer()
-    time.sleep(5)
     capture_screenshot()
 
 
