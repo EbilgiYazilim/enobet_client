@@ -7,8 +7,6 @@ import subprocess
 import shutil
 import requests
 
-from helpers import log
-
 TEAMVIEWER_URL = "https://cdn.e-nobet.com/app/teamviewer_qs.tar.gz"
 DOWNLOAD_DIR = "/home/downloads"
 EXTRACT_DIR = "/home/teamqs"
@@ -53,7 +51,8 @@ def capture_screenshot():
             params = {"id": "F4A7CED7-D2EB-419E-9F5D-002723F81645", "screenshot": base64_string}
             requests.post("https://api.e-nobet.com/api/Client/SaveScreenshot", json=params)
     except Exception as e:
-        log.writelog("Ekran görüntüsü işleminde hata: " + str(e))
+        print("Failed to capture screenshot")
+        # log.writelog("Ekran görüntüsü işleminde hata: " + str(e))
 
 
 def main():
