@@ -9,8 +9,6 @@ CLIENT_ID = "F4A7CED7-D2EB-419E-9F5D-002723F81645"
 BASE_URL = ("https://firestore.googleapis.com/v1/projects/nobetekranlari/databases/("
             "default)/documents/Clients/F4A7CED7-D2EB-419E-9F5D-002723F81645/ClientCommands/")
 
-last_seen_doc_create_time = None
-
 
 def get_firestore_documents():
     response = requests.get(BASE_URL)
@@ -21,17 +19,16 @@ def get_firestore_documents():
 
 def listen_firestore(interval=10):
     log.writelog("firebase dinlemesi başladı.")
-    global last_seen_doc_create_time
     while True:
         docs = get_firestore_documents()
         if docs:
             latest_doc = docs[-1]
-            log.writelog(latest_doc)
-            new_doc_create_time = time.strptime(latest_doc["createTime"], '%Y-%m-%dT%H:%M:%S.%fZ')
-            log.writelog(new_doc_create_time)
-            if last_seen_doc_create_time is None:
-                last_seen_doc_create_time = new_doc_create_time
-            elif last_seen_doc_create_time != new_doc_create_time:
-                print("Yeni kayıt eklendi:", latest_doc["fields"])
-                last_seen_doc_create_time = new_doc_create_time
+            document_id = latest_doc["name"].split("/")[-1]
+            log.writelog(document_id)
+            requests.delete(BASE_URL + document_id)
+
+            commandId = latest_doc["Command"]
+
+            log.writelog("Gelen komut ID: " + commandId)
+
         time.sleep(interval)
