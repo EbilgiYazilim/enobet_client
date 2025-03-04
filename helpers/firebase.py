@@ -1,9 +1,9 @@
+#! /usr/bin/python
+# -*- coding: utf-8 -*-
+
 import subprocess
-
 import requests
-import json
 import time
-
 from helpers import log
 
 PROJECT_ID = "nobetekranlari"
