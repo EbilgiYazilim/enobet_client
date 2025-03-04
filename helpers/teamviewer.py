@@ -48,9 +48,7 @@ def run_teamviewer():
 
 def capture_screenshot():
     try:
-        p = subprocess.Popen("env DISPLAY=:0.0 gnome-screenshot --file=" + SCREENSHOT_PATH, stdout=subprocess.PIPE,
-                             shell=True)
-        p.communicate()
+        subprocess.run(["scrot", SCREENSHOT_PATH])
 
         if os.path.exists(SCREENSHOT_PATH):
             with open(SCREENSHOT_PATH, "rb") as image_file:
