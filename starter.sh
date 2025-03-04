@@ -12,6 +12,8 @@ else
     git pull origin main
 fi
 
+sudo chmod -R +x /home/farma/enobet/
+
 if [ $? -eq 0 ]; then
     echo "Güncelleme tamamlandı, başlatılıyor..."
     sh "$MASTER_PATH/setup.sh"

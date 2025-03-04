@@ -16,11 +16,13 @@ SCREENSHOT_PATH = os.path.join(DOWNLOAD_DIR, "screenshot.png")
 
 def clean_directories():
     if os.path.exists(ARCHIVE_PATH):
-        os.remove(ARCHIVE_PATH)
-    if os.path.exists(EXTRACT_DIR):
-        shutil.rmtree(EXTRACT_DIR)
+        subprocess.run(["sudo", "rm", "-f", ARCHIVE_PATH], check=True)
 
-    os.makedirs(EXTRACT_DIR, exist_ok=True)
+    if os.path.exists(EXTRACT_DIR):
+        subprocess.run(["sudo", "rm", "-rf", EXTRACT_DIR], check=True)
+
+    subprocess.run(["sudo", "mkdir", "-p", EXTRACT_DIR], check=True)
+    subprocess.run(["sudo", "chmod", "777", EXTRACT_DIR], check=True)
 
 
 def download_teamviewer():
