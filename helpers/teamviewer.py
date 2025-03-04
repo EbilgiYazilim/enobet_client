@@ -57,6 +57,7 @@ def capture_screenshot():
         while not is_teamviewer_running():
             time.sleep(1)
 
+        time.sleep(10)
         subprocess.run(["scrot", SCREENSHOT_PATH])
 
         if os.path.exists(SCREENSHOT_PATH):
