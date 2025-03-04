@@ -14,7 +14,6 @@ last_seen_doc_create_time = None
 
 def get_firestore_documents():
     response = requests.get(BASE_URL)
-    log.writelog("get_firestore_documents response: " + str(response.json()))
     if response.status_code == 200:
         return response.json().get("documents", [])
     return []
@@ -27,7 +26,9 @@ def listen_firestore(interval=10):
         docs = get_firestore_documents()
         if docs:
             latest_doc = docs[-1]
+            log.writelog(latest_doc)
             new_doc_create_time = time.strptime(latest_doc["createTime"], '%Y-%m-%dT%H:%M:%S.%fZ')
+            log.writelog(new_doc_create_time)
             if last_seen_doc_create_time is None:
                 last_seen_doc_create_time = new_doc_create_time
             elif last_seen_doc_create_time != new_doc_create_time:
