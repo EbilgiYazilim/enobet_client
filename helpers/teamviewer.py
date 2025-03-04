@@ -17,7 +17,7 @@ SCREENSHOT_PATH = os.path.join(DOWNLOAD_DIR, "screenshot.png")
 def clean_directories():
     if os.path.exists(ARCHIVE_PATH):
         subprocess.run(["sudo", "rm", "-f", ARCHIVE_PATH], check=True)
-        subprocess.run(["sudo", "rm", "-f", TEAMVIEWER_DIR], check=True)
+        subprocess.run(["sudo", "rm", "-rf", TEAMVIEWER_DIR], check=True)
 
 
 def download_teamviewer():
