@@ -13,7 +13,7 @@ else
 fi
 
 if [ $? -eq 0 ]; then
-    echo "Güncelleme tamamlandı, yeniden başlatılıyor..."
+    echo "Güncelleme tamamlandı, başlatılıyor..."
     sh "$MASTER_PATH/setup.sh"
 else
     echo "Güncelleme hatası veya güncel sürüm kullanılıyor."
