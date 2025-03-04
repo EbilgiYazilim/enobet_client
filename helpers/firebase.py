@@ -47,5 +47,5 @@ def listen_firestore(interval=10):
                 last_seen_doc = latest_doc
             elif last_seen_doc["name"] != latest_doc["name"]:
                 print("Yeni kayıt eklendi:", latest_doc["fields"])
-                last_seen_doc = latest_doc  # Yeni kaydı sakla
+                last_seen_doc = latest_doc
         time.sleep(interval)
