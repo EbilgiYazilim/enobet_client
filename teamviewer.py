@@ -65,7 +65,9 @@ def is_teamviewer_running():
 
 def capture_screenshot():
     try:
-        os.remove(SCREENSHOT_PATH)
+        if os.path.exists(SCREENSHOT_PATH):
+            os.remove(SCREENSHOT_PATH)
+
         config = db.read_config_json()
         clientCode = config.get("clientCode")
 
