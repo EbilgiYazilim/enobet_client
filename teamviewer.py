@@ -43,6 +43,7 @@ def extract_teamviewer():
 
 
 def run_teamviewer():
+    subprocess.call(["sudo", "/home/farma/enobet/permission.sh"])
     log.writelog("Running Teamviewer QS...")
     teamviewer_path = os.path.join(TEAMVIEWER_DIR, "teamviewer")
 
