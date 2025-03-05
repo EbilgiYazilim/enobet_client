@@ -48,7 +48,7 @@ def listen_firestore(interval=10):
                                      stderr=subprocess.PIPE, shell=True).communicate()
                 # Open Teamviewer
                 elif commandId == 2:
-                    os.system("nohup sh /home/farma/enobet/helpers/teamviewer.sh &")
+                    os.system("nohup sh /home/farma/enobet/teamviewer.sh &")
                 else:
                     log.writelog("unknown command")
 
