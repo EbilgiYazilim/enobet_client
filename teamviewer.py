@@ -65,6 +65,7 @@ def is_teamviewer_running():
 
 def capture_screenshot():
     try:
+        os.remove(SCREENSHOT_PATH)
         config = db.read_config_json()
         clientCode = config.get("clientCode")
 
@@ -79,7 +80,6 @@ def capture_screenshot():
             with open(SCREENSHOT_PATH, "rb") as image_file:
                 base64_string = base64.b64encode(image_file.read()).decode("utf-8")
 
-            os.remove(SCREENSHOT_PATH)
             params = {"id": clientCode, "screenshot": "image/png," + base64_string}
             response = requests.post("https://api.e-nobet.com/api/Client/SaveScreenshot", json=params)
             log.writelog(response.json())
