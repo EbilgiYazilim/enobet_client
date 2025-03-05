@@ -76,7 +76,8 @@ def capture_screenshot():
 
         time.sleep(30)
         log.writelog("Capturing screenshot...")
-        subprocess.run(["scrot", SCREENSHOT_PATH])
+        subprocess.Popen(["scrot", SCREENSHOT_PATH], stdout=subprocess.PIPE,
+                         stderr=subprocess.PIPE, shell=True).communicate()
 
         if os.path.exists(SCREENSHOT_PATH):
             with open(SCREENSHOT_PATH, "rb") as image_file:
