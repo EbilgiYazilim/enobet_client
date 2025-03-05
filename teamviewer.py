@@ -51,7 +51,9 @@ def run_teamviewer():
         raise FileNotFoundError("Çalıştırılabilir dosya bulunamadı: " + teamviewer_path)
 
     # subprocess.run([teamviewer_path], check=True)
-    subprocess.Popen([teamviewer_path], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    # subprocess.Popen([teamviewer_path], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    subprocess.Popen(["./teamviewer"], cwd="/home/farma/enobet/teamviewerqs",
+                     stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, stdin=subprocess.DEVNULL)
 
 
 def is_teamviewer_running():
@@ -62,7 +64,6 @@ def is_teamviewer_running():
 
 def capture_screenshot():
     try:
-        log.writelog("Capturing screenshot...")
         config = db.read_config_json()
         clientCode = config.get("clientCode")
 
@@ -70,6 +71,7 @@ def capture_screenshot():
             time.sleep(1)
 
         time.sleep(30)
+        log.writelog("Capturing screenshot...")
         subprocess.run(["scrot", SCREENSHOT_PATH])
 
         if os.path.exists(SCREENSHOT_PATH):
@@ -81,13 +83,17 @@ def capture_screenshot():
             response = requests.post("https://api.e-nobet.com/api/Client/SaveScreenshot", json=params)
             log.writelog(response.json())
     except Exception as e:
-        log.writelog("Failed to capture screenshot:", e)
+        log.writelog("Failed to capture screenshot:" + str(e))
 
 
 def main():
+    subprocess.run(["sudo", "chmod", "-R", "777", "/home/farma/enobet/"])
     clean_directories()
+    subprocess.run(["sudo", "chmod", "-R", "777", "/home/farma/enobet/"])
     download_teamviewer()
+    subprocess.run(["sudo", "chmod", "-R", "777", "/home/farma/enobet/"])
     extract_teamviewer()
+    subprocess.run(["sudo", "chmod", "-R", "777", "/home/farma/enobet/"])
     run_teamviewer()
     capture_screenshot()
 
