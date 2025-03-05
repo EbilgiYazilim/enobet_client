@@ -51,7 +51,7 @@ def main():
 
         newSystemActive = os.path.exists(CONFIG_JSON_PATH)
         if newSystemActive:
-            subprocess.Popen(["sh", "/home/farma/enobet/helpers/nobet.py"], stdout=subprocess.DEVNULL,
+            subprocess.Popen(["sh", "/home/farma/enobet/nobet.py"], stdout=subprocess.DEVNULL,
                              stderr=subprocess.DEVNULL)
             firebase.listen_firestore()
         else:
