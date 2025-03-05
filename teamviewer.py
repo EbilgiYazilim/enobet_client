@@ -78,7 +78,8 @@ def capture_screenshot():
         log.writelog("Capturing screenshot...")
         subprocess.Popen(["scrot", SCREENSHOT_PATH], stdout=subprocess.PIPE,
                          stderr=subprocess.PIPE, shell=True).communicate()
-
+        time.sleep(1)
+        
         if os.path.exists(SCREENSHOT_PATH):
             with open(SCREENSHOT_PATH, "rb") as image_file:
                 base64_string = base64.b64encode(image_file.read()).decode("utf-8")
