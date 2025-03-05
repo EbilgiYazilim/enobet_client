@@ -66,13 +66,12 @@ def main():
                         # region nobet_ekran_starter güncellemesi
                         nobet_ekran_starter = "/home/farma/.config/openbox/nobet_ekran_starter.sh"
                         new_script_content = """
-                        #!/bin/bash
-                        
-                        sh ~/.fehbg &
-                        sudo chmod -R +x /home/farma/enobet/
-                        sudo chmod -R 777 /home/farma/enobet/
-                        /home/farma/enobet/starter.sh
-                        """
+#!/bin/bash                
+sh ~/.fehbg &
+sudo chmod -R +x /home/farma/enobet/
+sudo chmod -R 777 /home/farma/enobet/
+/home/farma/enobet/starter.sh
+"""
 
                         # Dosyanın içeriğini değiştir
                         with open(nobet_ekran_starter, "w") as file:

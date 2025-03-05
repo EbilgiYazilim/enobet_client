@@ -30,12 +30,13 @@ def write_config_json(crm_id, short_code, client_code, json_path):
         with open(json_path, "w") as json_file:
             json.dump(config_json_data, json_file, indent=4)
 
-        print("config.json oluşturuldu:", config_json_data)
+        log.writelog("config.json oluşturuldu:", config_json_data)
     except Exception as e:
         log.writelog("crm_id değeri alınamadı: " + str(e))
 
 
 def read_config_json():
+    log.writelog("config.json okunuyor.")
     json_path = "/home/farma/enobet/config.json"
 
     if os.path.exists(json_path):
