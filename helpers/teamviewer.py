@@ -6,8 +6,7 @@ import subprocess
 import time
 import requests
 
-from helpers import db
-from helpers import log
+import db
 
 config = db.read_config_json()
 clientCode = config.get("clientCode")
