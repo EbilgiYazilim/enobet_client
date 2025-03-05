@@ -85,6 +85,8 @@ def capture_screenshot():
             params = {"id": clientCode, "screenshot": "image/png," + base64_string}
             response = requests.post("https://api.e-nobet.com/api/Client/SaveScreenshot", json=params)
             log.writelog(response.json())
+        else:
+            log.writelog("Screenshot not found...")
     except Exception as e:
         log.writelog("Failed to capture screenshot:" + str(e))
 
