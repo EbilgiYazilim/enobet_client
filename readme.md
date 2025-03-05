@@ -1,5 +1,34 @@
 # Proje Adı
 
+## Eski Sistem
+
+Aşağıdaki dosya açılışta OpenBox çalıştıktan sonra OpenBox üzerinde çalışıyor.
+
+``
+/home/farma/.config/openbox/nobet_ekran_starter.sh
+``
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## Açıklama
 Bu proje, [uygulamanın amacını buraya yaz] amacıyla geliştirilmiştir. Kullanıcılar, [uygulamanın sağladığı temel özellikleri buraya yaz] gibi işlemleri gerçekleştirebilirler.
 

@@ -49,7 +49,6 @@ def main():
         if is_firefox_running():
             return
 
-        subprocess.call(["sudo", "python3", "/home/farma/enobet/helpers/startup.py"])
         newSystemActive = os.path.exists(CONFIG_JSON_PATH)
         if newSystemActive:
             subprocess.Popen(["sh", "/home/farma/enobet/helpers/nobet.py"], stdout=subprocess.DEVNULL,
@@ -63,6 +62,29 @@ def main():
                     resultClientCode = api.get_client_code(resultShortCode)
                     if len(resultClientCode) > 10:
                         db.write_config_json(crm_id, resultShortCode, resultClientCode, CONFIG_JSON_PATH)
+
+                        # region nobet_ekran_starter güncellemesi
+                        nobet_ekran_starter = "/home/farma/.config/openbox/nobet_ekran_starter.sh"
+                        new_script_content = """
+                        #!/bin/bash
+                        
+                        sh ~/.fehbg &
+                        sudo chmod -R +x /home/farma/enobet/
+                        sudo chmod -R 777 /home/farma/enobet/
+                        /home/farma/enobet/starter.sh
+                        """
+
+                        # Dosyanın içeriğini değiştir
+                        with open(nobet_ekran_starter, "w") as file:
+                            file.write(new_script_content)
+                        # endregion
+
+                        # region Eski sistem klasörünün adını değiştir
+                        old_folder = "/home/farma/nobet_ekran"
+                        new_folder = "/home/farma/eski_nobet_ekran"
+                        os.rename(old_folder, new_folder)
+                        # endregion
+
                     else:
                         log.writelog("Client kod alınamadı lütfen daha sonra tekrar deneyiniz.")
                 else:
