@@ -6,10 +6,7 @@ import subprocess
 import time
 import requests
 
-import db
-
-config = db.read_config_json()
-clientCode = config.get("clientCode")
+from helpers import db
 
 TEAMVIEWER_URL = "https://cdn.e-nobet.com/app/teamviewer_qs.tar.gz"
 DOWNLOAD_DIR = "/home/farma/enobet/"
@@ -57,6 +54,9 @@ def is_teamviewer_running():
 
 def capture_screenshot():
     try:
+        config = db.read_config_json()
+        clientCode = config.get("clientCode")
+
         while not is_teamviewer_running():
             time.sleep(1)
 
