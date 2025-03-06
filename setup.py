@@ -84,6 +84,7 @@ sudo chmod -R 777 /home/farma/enobet/
                         os.rename(old_folder, new_folder)
                         # endregion
 
+                        log.writelog("Yeni sisteme geçiş tamamlandı.")
                     else:
                         log.writelog("Client kod alınamadı lütfen daha sonra tekrar deneyiniz.")
                 else:

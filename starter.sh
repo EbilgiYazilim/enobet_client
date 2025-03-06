@@ -19,8 +19,8 @@ sudo chmod -R 777 /home/farma/enobet/
 
 if [ $? -eq 0 ]; then
     echo "Güncelleme tamamlandı, başlatılıyor..."
-    sh "$MASTER_PATH/setup.sh"
+    python3 /home/farma/enobet/setup.py
 else
     echo "Güncelleme hatası veya güncel sürüm kullanılıyor."
-    sh "$MASTER_PATH/setup.sh"
+    python3 /home/farma/enobet/setup.py
 fi
