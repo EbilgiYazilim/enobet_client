@@ -2,6 +2,8 @@
 
 MASTER_PATH="/home/farma/enobet"
 
+sleep 60
+
 sudo rm -f /home/farma/log.log /home/farma/enobet/nohup.out
 
 if [ ! -d "$MASTER_PATH/.git" ]; then

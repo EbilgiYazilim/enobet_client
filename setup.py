@@ -61,13 +61,10 @@ def set_resolution_for_all_displays():
         log.writelog("Ekran çözünürlükleri ayarlanırken hata oluştu:" + str(e))
 
 
-# Metodu çağır
-set_resolution_for_all_displays()
-
-
 def main():
     try:
         log.writelog("Uygulama başladı.")
+        set_resolution_for_all_displays()
 
         if is_firefox_running():
             return
