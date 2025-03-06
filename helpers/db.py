@@ -36,7 +36,6 @@ def write_config_json(crm_id, short_code, client_code, json_path):
 
 
 def read_config_json():
-    log.writelog("config.json okunuyor.")
     json_path = "/home/farma/enobet/config.json"
 
     if os.path.exists(json_path):
