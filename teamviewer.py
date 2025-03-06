@@ -77,7 +77,7 @@ def capture_screenshot():
         time.sleep(30)
         log.writelog("Capturing screenshot...")
         subprocess.Popen(["scrot", "/home/farma/enobet/screenshot.png"], stdout=subprocess.PIPE,
-                         stderr=subprocess.PIPE, shell=True).communicate()
+                         stderr=subprocess.PIPE).communicate()
         time.sleep(1)
 
         if os.path.exists(SCREENSHOT_PATH):
