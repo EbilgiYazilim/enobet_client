@@ -43,14 +43,12 @@ def crontab_process():
         os.system("crontab -r")
         # endregion
 
-        subprocess.run("crontab -l > /tmp/mycron", shell=True, check=True)
-
         # Yeni satırı ekle
-        with open("/tmp/mycron", "a") as file:
+        with open("/home/farma/enobet/crons", "w") as file:
             file.write("* * * * *" + " python3 /home/farma/enobet/check.py\n")
 
         # Güncellenmiş crontab'ı yükle
-        subprocess.run("crontab /tmp/mycron", shell=True, check=True)
+        subprocess.run("crontab /home/farma/enobet/crons", shell=True, check=True)
     except Exception as e:
         log.writelog("Crontab güncellenirken hata oluştu: " + str(e))
 
