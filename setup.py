@@ -84,6 +84,10 @@ sudo chmod -R 777 /home/farma/enobet/
                         os.rename(old_folder, new_folder)
                         # endregion
 
+                        #region Crontab'ı temizler
+                        os.system("crontab -r")
+                        #endregion
+
                         log.writelog("Yeni sisteme geçiş tamamlandı.")
                     else:
                         log.writelog("Client kod alınamadı lütfen daha sonra tekrar deneyiniz.")
