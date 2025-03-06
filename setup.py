@@ -63,14 +63,15 @@ def main():
         if is_firefox_running():
             return
 
+        if os.path.exists("/home/farma/enobet/wallpaper.png"):
+            shutil.move("/home/farma/enobet/wallpaper.png", "/home/farma/wallpaper.png")
+
         newSystemActive = os.path.exists(CONFIG_JSON_PATH)
         if newSystemActive:
             subprocess.Popen(["python3", "/home/farma/enobet/nobet.py"], stdout=subprocess.DEVNULL,
                              stderr=subprocess.DEVNULL)
             log.writelog("Firefox açıldı.")
         else:
-            if os.path.exists("/home/farma/enobet/wallpaper.png"):
-                shutil.move("/home/farma/enobet/wallpaper.png", "/home/farma/wallpaper.png")
 
             crm_id = db.get_crm_id(CONFIG_INI_PATH)
             if crm_id > 0:
