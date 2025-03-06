@@ -43,10 +43,6 @@ def crontab_process():
         os.system("crontab -r")
         # endregion
 
-        # Yeni satırı ekle
-        with open("/home/farma/enobet/crons", "w") as file:
-            file.write("* * * * *" + " python3 /home/farma/enobet/check.py\n")
-
         # Güncellenmiş crontab'ı yükle
         subprocess.run("crontab /home/farma/enobet/crons", shell=True, check=True)
     except Exception as e:

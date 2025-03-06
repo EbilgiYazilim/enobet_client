@@ -2,7 +2,20 @@
 
 MASTER_PATH="/home/farma/enobet"
 
-sleep 60
+retry_count=0
+max_retries=3
+
+while [ $retry_count -lt $max_retries ]; do
+    # Google'a 1 ping gönder, başarılı olursa devam et
+    if ping -c 1 -W 2 8.8.8.8 > /dev/null 2>&1; then
+        echo "✅ İnternet bağlantısı var."
+        break
+    else
+        echo "❌ İnternet bağlantısı yok. $((retry_count + 1)). deneme. 30 saniye bekleniyor..."
+        sleep 30
+        ((retry_count++))  # Deneme sayısını artır
+    fi
+done
 
 sudo rm -f /home/farma/log.log /home/farma/enobet/nohup.out
 
