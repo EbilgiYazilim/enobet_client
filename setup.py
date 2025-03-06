@@ -9,35 +9,11 @@ import subprocess
 from helpers import api
 from helpers import log
 from helpers import db
-from helpers import ping
 
 MASTER_PATH = "/home/farma/enobet/"
 CONFIG_INI_PATH = "/home/farma/nobet_ekran/config.ini"
 CONFIG_JSON_PATH = os.path.join(MASTER_PATH, "config.json")
 GIT_REPO = "https://github.com/EbilgiYazilim/enobet_client.git"
-
-
-def check_app():
-    try:
-        log.writelog("Uygulama kontrolü yapılıyor.")
-
-        if not os.path.exists(os.path.join(MASTER_PATH, ".git")):
-            log.writelog("Uygulama bulunamadı, ana dizin siliniyor.")
-            shutil.rmtree(MASTER_PATH)
-            log.writelog("Uygulama klonlanıyor.")
-            subprocess.call(["git", "clone", GIT_REPO, MASTER_PATH])
-            log.writelog("Uygulama klonlandı.")
-            return True
-        else:
-            log.writelog("Güncellemeler kontrol ediliyor.")
-            os.chdir(MASTER_PATH)
-            # subprocess.call(["git", "reset", "--hard", "origin/main"])  # Yerel değişiklikleri sıfırla
-            subprocess.call(["git", "pull", "origin", "main"])  # Güncellemeleri al
-            log.writelog("Güncellemeler tamamlandı.")
-            return True
-    except Exception as e:
-        log.writelog("Uygulama kontrolünde hata oluştu: " + str(e))
-        return False
 
 
 def is_firefox_running():
@@ -61,9 +37,29 @@ def set_resolution_for_all_displays():
         log.writelog("Ekran çözünürlükleri ayarlanırken hata oluştu:" + str(e))
 
 
+def crontab_process():
+    try:
+        # region Crontab'ı temizler
+        os.system("crontab -r")
+        # endregion
+
+        subprocess.run("crontab -l > /tmp/mycron", shell=True, check=True)
+
+        # Yeni satırı ekle
+        with open("/tmp/mycron", "a") as file:
+            file.write("* * * * *" + " python3 /home/farma/enobet/check.py\n")
+
+        # Güncellenmiş crontab'ı yükle
+        subprocess.run("crontab /tmp/mycron", shell=True, check=True)
+    except Exception as e:
+        log.writelog("Crontab güncellenirken hata oluştu: " + str(e))
+
+
 def main():
     try:
         log.writelog("Uygulama başladı.")
+
+        crontab_process()
         set_resolution_for_all_displays()
 
         if is_firefox_running():
@@ -73,8 +69,7 @@ def main():
         if newSystemActive:
             subprocess.Popen(["python3", "/home/farma/enobet/nobet.py"], stdout=subprocess.DEVNULL,
                              stderr=subprocess.DEVNULL)
-            log.writelog("Firefox açıldı, komutlar için server dinleniyor.")
-            ping.get_command_from_server()
+            log.writelog("Firefox açıldı.")
         else:
             if os.path.exists("/home/farma/enobet/wallpaper.png"):
                 shutil.move("/home/farma/enobet/wallpaper.png", "/home/farma/wallpaper.png")
@@ -106,10 +101,6 @@ sudo chmod -R 777 /home/farma/enobet/
                         old_folder = "/home/farma/nobet_ekran"
                         new_folder = "/home/farma/eski_nobet_ekran"
                         os.rename(old_folder, new_folder)
-                        # endregion
-
-                        # region Crontab'ı temizler
-                        os.system("crontab -r")
                         # endregion
 
                         log.writelog("Yeni sisteme geçiş tamamlandı.")
