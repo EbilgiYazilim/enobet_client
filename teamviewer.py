@@ -94,13 +94,10 @@ def capture_screenshot():
 
 
 def main():
-    subprocess.run(["sudo", "chmod", "-R", "777", "/home/farma/enobet/"])
+    subprocess.call(["sudo", "/home/farma/enobet/permission.sh"])
     clean_directories()
-    subprocess.run(["sudo", "chmod", "-R", "777", "/home/farma/enobet/"])
     download_teamviewer()
-    subprocess.run(["sudo", "chmod", "-R", "777", "/home/farma/enobet/"])
     extract_teamviewer()
-    subprocess.run(["sudo", "chmod", "-R", "777", "/home/farma/enobet/"])
     run_teamviewer()
     capture_screenshot()
 

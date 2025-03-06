@@ -8,6 +8,9 @@ if [ ! -d "$MASTER_PATH/.git" ]; then
     echo "Uygulama bulunamadı, klonlanıyor..."
     git clone https://github.com/EbilgiYazilim/enobet_client.git "$MASTER_PATH"
 else
+    sudo chmod -R +x /home/farma/enobet/
+    sudo chmod -R 777 /home/farma/enobet/
+
     echo "Güncellemeler kontrol ediliyor..."
     cd "$MASTER_PATH"
     git reset --hard origin/main

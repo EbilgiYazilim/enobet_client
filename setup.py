@@ -2,13 +2,14 @@
 # -*- coding: utf-8 -*-
 
 import os
+import re
 import shutil
 import subprocess
 
 from helpers import api
 from helpers import log
 from helpers import db
-from helpers import firebase
+from helpers import ping
 
 MASTER_PATH = "/home/farma/enobet/"
 CONFIG_INI_PATH = "/home/farma/nobet_ekran/config.ini"
@@ -44,8 +45,30 @@ def is_firefox_running():
     return result.returncode == 0
 
 
+def set_resolution_for_all_displays():
+    try:
+        xrandr_output = subprocess.check_output("xrandr", shell=True).decode("utf-8")
+        connected_displays = re.findall(r"(\S+) connected", xrandr_output)
+
+        if not connected_displays:
+            log.writelog("Bağlı ekran bulunamadı!")
+            return
+
+        for display in connected_displays:
+            subprocess.run("xrandr --output " + display + " --mode 1280x720", shell=True, check=True)
+
+    except Exception as e:
+        log.writelog("Ekran çözünürlükleri ayarlanırken hata oluştu:" + str(e))
+
+
+# Metodu çağır
+set_resolution_for_all_displays()
+
+
 def main():
     try:
+        log.writelog("Uygulama başladı.")
+
         if is_firefox_running():
             return
 
@@ -53,8 +76,12 @@ def main():
         if newSystemActive:
             subprocess.Popen(["python3", "/home/farma/enobet/nobet.py"], stdout=subprocess.DEVNULL,
                              stderr=subprocess.DEVNULL)
-            firebase.listen_firestore()
+            log.writelog("Firefox açıldı, komutlar için server dinleniyor.")
+            ping.get_command_from_server()
         else:
+            if os.path.exists("/home/farma/enobet/wallpaper.png"):
+                shutil.move("/home/farma/enobet/wallpaper.png", "/home/farma/wallpaper.png")
+
             crm_id = db.get_crm_id(CONFIG_INI_PATH)
             if crm_id > 0:
                 resultShortCode = api.get_short_code(str(crm_id))
@@ -84,9 +111,9 @@ sudo chmod -R 777 /home/farma/enobet/
                         os.rename(old_folder, new_folder)
                         # endregion
 
-                        #region Crontab'ı temizler
+                        # region Crontab'ı temizler
                         os.system("crontab -r")
-                        #endregion
+                        # endregion
 
                         log.writelog("Yeni sisteme geçiş tamamlandı.")
                         print("Yeni sisteme geçiş tamamlandı.")
@@ -103,3 +130,4 @@ sudo chmod -R 777 /home/farma/enobet/
 
 if __name__ == "__main__":
     main()
+    log.writelog("Uygulama kapanıyor.")
