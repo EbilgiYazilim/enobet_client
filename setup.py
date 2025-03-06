@@ -89,6 +89,7 @@ sudo chmod -R 777 /home/farma/enobet/
                         #endregion
 
                         log.writelog("Yeni sisteme geçiş tamamlandı.")
+                        print("Yeni sisteme geçiş tamamlandı.")
                     else:
                         log.writelog("Client kod alınamadı lütfen daha sonra tekrar deneyiniz.")
                 else:
