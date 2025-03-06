@@ -65,6 +65,8 @@ def is_teamviewer_running():
 
 def capture_screenshot():
     try:
+        subprocess.call(["sudo", "/home/farma/enobet/permission.sh"])
+
         if os.path.exists(SCREENSHOT_PATH):
             os.remove(SCREENSHOT_PATH)
 
@@ -79,6 +81,8 @@ def capture_screenshot():
         subprocess.Popen(["scrot", "/home/farma/enobet/screenshot.png"], stdout=subprocess.PIPE,
                          stderr=subprocess.PIPE).communicate()
         time.sleep(1)
+
+        subprocess.call(["sudo", "/home/farma/enobet/permission.sh"])
 
         if os.path.exists(SCREENSHOT_PATH):
             with open(SCREENSHOT_PATH, "rb") as image_file:

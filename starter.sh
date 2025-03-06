@@ -2,18 +2,13 @@
 
 MASTER_PATH="/home/farma/enobet"
 
-retry_count=0
-max_retries=3
-
-while [ $retry_count -lt $max_retries ]; do
-    # Google'a 1 ping gönder, başarılı olursa devam et
+while true; do
     if ping -c 1 -W 2 8.8.8.8 > /dev/null 2>&1; then
         echo "✅ İnternet bağlantısı var."
         break
     else
-        echo "❌ İnternet bağlantısı yok. $((retry_count + 1)). deneme. 30 saniye bekleniyor..."
+        echo "❌ İnternet bağlantısı yok. 30 saniye bekleniyor..."
         sleep 30
-        ((retry_count++))  # Deneme sayısını artır
     fi
 done
 
