@@ -127,4 +127,3 @@ sudo chmod -R 777 /home/farma/enobet/
 
 if __name__ == "__main__":
     main()
-    log.writelog("Uygulama kapanıyor.")
