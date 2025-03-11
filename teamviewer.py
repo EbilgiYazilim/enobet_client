@@ -51,10 +51,11 @@ def run_teamviewer():
         log.writelog("Teamviewer QS not found...")
         raise FileNotFoundError("Çalıştırılabilir dosya bulunamadı: " + teamviewer_path)
 
+    os.system("sh /home/farma/enobet/teamstart.sh")
     # subprocess.run([teamviewer_path], check=True)
     # subprocess.Popen([teamviewer_path], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    subprocess.Popen(["./teamviewer"], cwd="/home/farma/enobet/teamviewerqs",
-                     stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, stdin=subprocess.DEVNULL)
+    #subprocess.Popen(["./teamviewer"], cwd="/home/farma/enobet/teamviewerqs",
+    #                 stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, stdin=subprocess.DEVNULL)
 
 
 def is_teamviewer_running():
