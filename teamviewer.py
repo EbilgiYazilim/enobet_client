@@ -59,7 +59,10 @@ def run_teamviewer():
 
 def is_teamviewer_running():
     result = subprocess.run(["pgrep", "-f", TEAMVIEWER_PROCESS], stdout=subprocess.PIPE)
-    log.writelog("Checking if Teamviewer QS is running:" + str(result.returncode))
+    if result.returncode == 0:
+        log.writelog("Team viewer process is running...")
+    else:
+        log.writelog("Team viewer process is NOT running...")
     return result.returncode == 0
 
 
