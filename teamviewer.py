@@ -43,28 +43,31 @@ def extract_teamviewer():
 
 
 def run_teamviewer():
-    subprocess.call(["sudo", "/home/farma/enobet/permission.sh"])
-    log.writelog("Running Teamviewer QS...")
-    teamviewer_path = os.path.join(TEAMVIEWER_DIR, "teamviewer")
+    try:
+        subprocess.call(["sudo", "/home/farma/enobet/permission.sh"])
+        log.writelog("Running Teamviewer QS...")
+        teamviewer_path = os.path.join(TEAMVIEWER_DIR, "teamviewer")
 
-    if not os.path.exists(teamviewer_path):
-        log.writelog("Teamviewer QS not found...")
-        raise FileNotFoundError("Çalıştırılabilir dosya bulunamadı: " + teamviewer_path)
+        if not os.path.exists(teamviewer_path):
+            log.writelog("Teamviewer QS not found...")
+            raise FileNotFoundError("Çalıştırılabilir dosya bulunamadı: " + teamviewer_path)
 
-    os.system("sh /home/farma/enobet/teamstart.sh")
-    # subprocess.run([teamviewer_path], check=True)
-    # subprocess.Popen([teamviewer_path], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    #subprocess.Popen(["./teamviewer"], cwd="/home/farma/enobet/teamviewerqs",
-    #                 stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, stdin=subprocess.DEVNULL)
+        subprocess.Popen(["./teamviewer"], cwd="/home/farma/enobet/teamviewerqs",
+                         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, stdin=subprocess.DEVNULL)
+    except Exception as e:
+        log.writelog("Teamviewer çalıştırılamadı hata oluştu: " + str(e))
 
 
 def is_teamviewer_running():
-    result = subprocess.run(["pgrep", "-f", TEAMVIEWER_PROCESS], stdout=subprocess.PIPE)
-    if result.returncode == 0:
-        log.writelog("Team viewer process is running...")
-    else:
-        log.writelog("Team viewer process is NOT running...")
-    return result.returncode == 0
+    try:
+        result = subprocess.run(["pgrep", "-f", TEAMVIEWER_PROCESS], stdout=subprocess.PIPE)
+        if result.returncode == 0:
+            log.writelog("Team viewer process is running...")
+        else:
+            log.writelog("Team viewer process is NOT running...")
+        return result.returncode == 0
+    except Exception as e:
+        log.writelog("Teamviewer çalıştırılamadı hata oluştu: " + str(e))
 
 
 def capture_screenshot():
@@ -80,7 +83,6 @@ def capture_screenshot():
         while not is_teamviewer_running():
             time.sleep(1)
 
-        time.sleep(30)
         log.writelog("Capturing screenshot...")
         subprocess.Popen(["scrot", "screenshot.png"], stdout=subprocess.PIPE,
                          stderr=subprocess.PIPE).communicate()

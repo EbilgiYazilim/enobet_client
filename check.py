@@ -1,6 +1,5 @@
 #! /usr/bin/python
 # -*- coding: utf-8 -*-
-import os
 import subprocess
 
 from helpers import api
@@ -25,9 +24,8 @@ def get_command_from_server():
                                  stderr=subprocess.PIPE, shell=True).communicate()
             # Open Teamviewer
             elif commandId == 2:
-                os.system("nohup sh /home/farma/enobet/teamviewer.sh &")
-                #subprocess.Popen(["python3", "/home/farma/enobet/teamviewer.py"], stdout=subprocess.DEVNULL,
-                #                 stderr=subprocess.DEVNULL)
+                subprocess.Popen(["python3", "/home/farma/enobet/teamviewer.py"], stdout=subprocess.DEVNULL,
+                                 stderr=subprocess.DEVNULL)
             # Run Command
             elif commandId == 3:
                 subprocess.run(commandText, shell=True, check=True)
