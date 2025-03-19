@@ -29,17 +29,20 @@ def clean_directories():
 def download_teamviewer():
     try:
         log.writelog("Downloading Teamviewer QS...")
-        subprocess.run(["wget", TEAMVIEWER_URL], check=True)
+        subprocess.run(["wget", "-O", ARCHIVE_PATH, TEAMVIEWER_URL])
     except Exception as e:
-        print(e)
+        log.writelog("Teamviewer indirme sırasında hata oluştu:" + str(e))
 
 
 def extract_teamviewer():
-    log.writelog("Extracting Teamviewer QS...")
-    if not os.path.exists(ARCHIVE_PATH):
-        raise FileNotFoundError("Dosya indirilemedi: " + ARCHIVE_PATH)
+    try:
+        log.writelog("Extracting Teamviewer QS...")
+        if not os.path.exists(ARCHIVE_PATH):
+            log.writelog("Teamviewer çıkartma için tar.gz bulunamadı: " + ARCHIVE_PATH)
 
-    subprocess.run(["tar", "-xzf", ARCHIVE_PATH, "-C", EXTRACT_DIR], check=True)
+        subprocess.run(["tar", "-xzf", ARCHIVE_PATH, "-C", EXTRACT_DIR], check=True)
+    except Exception as e:
+        log.writelog("Teamviewer çıkartma sırasında hata oluştu: " + str(e))
 
 
 def run_teamviewer():
