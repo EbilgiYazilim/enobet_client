@@ -54,8 +54,7 @@ def run_teamviewer():
         if not os.path.exists(teamviewer_path):
             log.writelog("Teamviewer çalıştırmak için uygulama bulunamadı.")
         else:
-            subprocess.Popen(["sh /home/farma/enobet/teamstart.sh"], stdout=subprocess.PIPE,
-                             stderr=subprocess.PIPE, shell=True).communicate()
+            subprocess.Popen(["./teamviewer"], cwd="/home/farma/enobet/teamviewerqs")
     except Exception as e:
         log.writelog("Teamviewer çalıştırılamadı hata oluştu: " + str(e))
 
