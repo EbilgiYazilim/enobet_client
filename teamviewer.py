@@ -28,35 +28,34 @@ def clean_directories():
 
 def download_teamviewer():
     try:
-        log.writelog("Downloading Teamviewer QS...")
+        log.writelog("Teamviewer tar.gz indiriliyor.")
         subprocess.run(["wget", "-O", ARCHIVE_PATH, TEAMVIEWER_URL])
     except Exception as e:
-        log.writelog("Teamviewer indirme sırasında hata oluştu:" + str(e))
+        log.writelog("Teamviewer tar.gz indirme sırasında hata oluştu:" + str(e))
 
 
 def extract_teamviewer():
     try:
-        log.writelog("Extracting Teamviewer QS...")
+        log.writelog("Teamviewer tar.gz çıkartılıyor.")
         if not os.path.exists(ARCHIVE_PATH):
-            log.writelog("Teamviewer çıkartma için tar.gz bulunamadı: " + ARCHIVE_PATH)
-
-        subprocess.run(["tar", "-xzf", ARCHIVE_PATH, "-C", EXTRACT_DIR], check=True)
+            log.writelog("Teamviewer tar.gz bulunamadı: " + ARCHIVE_PATH)
+        else:
+            subprocess.run(["tar", "-xzf", ARCHIVE_PATH, "-C", EXTRACT_DIR], check=True)
     except Exception as e:
-        log.writelog("Teamviewer çıkartma sırasında hata oluştu: " + str(e))
+        log.writelog("Teamviewer tar.gz çıkartma sırasında hata oluştu: " + str(e))
 
 
 def run_teamviewer():
     try:
         subprocess.call(["sudo", "/home/farma/enobet/permission.sh"])
-        log.writelog("Running Teamviewer QS...")
+        log.writelog("Teamviewer çalıştırılıyor.")
         teamviewer_path = os.path.join(TEAMVIEWER_DIR, "teamviewer")
 
         if not os.path.exists(teamviewer_path):
-            log.writelog("Teamviewer QS not found...")
-            raise FileNotFoundError("Çalıştırılabilir dosya bulunamadı: " + teamviewer_path)
-
-        subprocess.Popen(["./teamviewer"], cwd="/home/farma/enobet/teamviewerqs",
-                         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, stdin=subprocess.DEVNULL)
+            log.writelog("Teamviewer çalıştırmak için uygulama bulunamadı.")
+        else:
+            subprocess.Popen(["./teamviewer"], cwd="/home/farma/enobet/teamviewerqs",
+                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, stdin=subprocess.DEVNULL)
     except Exception as e:
         log.writelog("Teamviewer çalıştırılamadı hata oluştu: " + str(e))
 
@@ -65,9 +64,9 @@ def is_teamviewer_running():
     try:
         result = subprocess.run(["pgrep", "-f", TEAMVIEWER_PROCESS], stdout=subprocess.PIPE)
         if result.returncode == 0:
-            log.writelog("Team viewer process is running...")
+            log.writelog("Teamviewer çalışıyor.")
         else:
-            log.writelog("Team viewer process is NOT running...")
+            log.writelog("Teamviewer çalışmıyor.")
         return result.returncode == 0
     except Exception as e:
         log.writelog("Teamviewer çalıştırılamadı hata oluştu: " + str(e))
@@ -86,12 +85,10 @@ def capture_screenshot():
         while not is_teamviewer_running():
             time.sleep(1)
 
-        log.writelog("Capturing screenshot...")
-        subprocess.Popen(["scrot", "screenshot.png"], stdout=subprocess.PIPE,
-                         stderr=subprocess.PIPE).communicate()
-        time.sleep(1)
+        log.writelog("Ekran görüntüsü alınıyor.")
 
-        subprocess.call(["sudo", "/home/farma/enobet/permission.sh"])
+        subprocess.run(["scrot", SCREENSHOT_PATH])
+        time.sleep(1)
 
         if os.path.exists(SCREENSHOT_PATH):
             with open(SCREENSHOT_PATH, "rb") as image_file:
@@ -101,9 +98,9 @@ def capture_screenshot():
             response = requests.post("https://api.e-nobet.com/api/Client/SaveScreenshot", json=params)
             log.writelog(response.json())
         else:
-            log.writelog("Screenshot not found...")
+            log.writelog("Ekran görüntüsü dosyası bulunamadı.")
     except Exception as e:
-        log.writelog("Failed to capture screenshot:" + str(e))
+        log.writelog("Ekran görüntürü alınırken hata oluştu: " + str(e))
 
 
 def main():
