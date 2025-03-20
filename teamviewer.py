@@ -86,7 +86,8 @@ def capture_screenshot():
 
         log.writelog("Ekran görüntüsü alınıyor.")
 
-        subprocess.run(["scrot", SCREENSHOT_PATH])
+        subprocess.Popen(["scrot", "/home/farma/enobet/screenshot.png"], stdout=subprocess.PIPE,
+                         stderr=subprocess.PIPE).communicate()
         time.sleep(1)
 
         if os.path.exists(SCREENSHOT_PATH):
