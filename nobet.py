@@ -70,7 +70,8 @@ def open_firefox_fullscreen():
         subprocess.Popen(["xset", "-dpms"])
         subprocess.Popen(["xset", "s", "off"])
         subprocess.Popen(["xset", "s", "noblank"])
-        subprocess.Popen(["xrandr", "--output", "VGA-1", "--same-as", "HDMI-1"])
+        subprocess.Popen(["sudo", "/home/farma/enobet/mirdsp.sh"])
+        #subprocess.Popen(["xrandr", "--output", "VGA-1", "--same-as", "HDMI-1"])
         subprocess.Popen(["firefox", "--kiosk", "https://e-nobet.com/" + shortCode])
         log.writelog("Firefox opened in fullscreen (kiosk) mode.")
     except Exception as e:
