@@ -23,7 +23,7 @@ else
 
     echo "Güncellemeler kontrol ediliyor..."
     cd "$MASTER_PATH"
-    #git reset --hard origin/main
+    git reset --hard origin/main
     git pull origin main
 fi
 
