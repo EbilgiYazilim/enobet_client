@@ -12,6 +12,8 @@ while true; do
     fi
 done
 
+sleep 30
+
 sudo rm -f /home/farma/log.log /home/farma/enobet/nohup.out
 
 if [ ! -d "$MASTER_PATH/.git" ]; then
