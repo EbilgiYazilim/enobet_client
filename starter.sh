@@ -5,14 +5,13 @@ MASTER_PATH="/home/farma/enobet"
 while true; do
     if ping -c 1 -W 2 8.8.8.8 > /dev/null 2>&1; then
         echo "✅ İnternet bağlantısı var."
+        sleep 30
         break
     else
         echo "❌ İnternet bağlantısı yok. 30 saniye bekleniyor..."
         sleep 30
     fi
 done
-
-sleep 30
 
 sudo rm -f /home/farma/log.log /home/farma/enobet/nohup.out
 
