@@ -28,10 +28,14 @@ fi
 if [ ! -d "$MASTER_PATH/.git" ]; then
     echo "Uygulama bulunamadı, klonlanıyor..."
     git clone https://github.com/EbilgiYazilim/enobet_client.git "$MASTER_PATH"
+    git pull origin main
+    sync
 else
     echo "Uygulama dizini silinip yeniden klonlanıyor..."
     sudo rm -rf "$MASTER_PATH"
     git clone https://github.com/EbilgiYazilim/enobet_client.git "$MASTER_PATH"
+    git pull origin main
+    sync
 fi
 
 #git'ten proje çekilemezse devam etmesin.
