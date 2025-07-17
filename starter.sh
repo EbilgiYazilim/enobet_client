@@ -24,25 +24,22 @@ if [ -f "$CONFIG_FILE" ]; then
     echo "🛡️ config.json yedeklendi."
 fi
 
-#git'ten projeyi çekelim. Daha önce çekilmişse silip yeniden çekelim.
-if [ ! -d "$MASTER_PATH/.git" ]; then
-    echo "Uygulama bulunamadı, klonlanıyor..."
-    git clone https://github.com/EbilgiYazilim/enobet_client.git "$MASTER_PATH"
-    git pull origin main
-    sync
-else
-    echo "Uygulama dizini silinip yeniden klonlanıyor..."
+# varsa dizini sil
+if [ -d "$MASTER_PATH" ]; then
+    echo "Mevcut uygulama dizini siliniyor..."
     sudo rm -rf "$MASTER_PATH"
-    git clone https://github.com/EbilgiYazilim/enobet_client.git "$MASTER_PATH"
-    git pull origin main
-    sync
 fi
 
-#git'ten proje çekilemezse devam etmesin.
-if [ ! -d "$MASTER_PATH/.git" ]; then
-    echo "❌ Klonlama başarısız oldu! Çıkılıyor."
-    exit 1
-fi
+while true; do
+    echo "GitHub'dan proje klonlanıyor..."
+    if git clone https://github.com/EbilgiYazilim/enobet_client.git "$MASTER_PATH"; then
+        echo "Klonlama başarılı."
+        break
+    else
+        echo "Klonlama başarısız oldu. 5 saniye sonra tekrar deneniyor..."
+        sleep 5
+    fi
+done
 
 #yedeklenmiş config.json varsa geri yükleyelim.
 if [ -f "$BACKUP_CONFIG" ]; then
