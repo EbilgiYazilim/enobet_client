@@ -24,11 +24,11 @@ def restart_pc():
 def get_command_from_server():
     try:
         # Saat kontrolü (PC saati)
-        now_str = datetime.now().strftime("%H:%M")
-        if now_str in RESTART_TIMES:
-            log.writelog(f"Zamanlanan restart ({now_str}) tetiklendi.")
-            restart_pc()
-            return  # Zamanlı restart yapıldıysa başka komut çalıştırma
+        # now_str = datetime.now().strftime("%H:%M")
+        # if now_str in RESTART_TIMES:
+        #     log.writelog(f"Zamanlanan restart ({now_str}) tetiklendi.")
+        #     restart_pc()
+        #     return  # Zamanlı restart yapıldıysa başka komut çalıştırma
 
         check_internet = api.get_connection_status()
         if check_internet:
