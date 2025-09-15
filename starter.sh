@@ -24,15 +24,20 @@ if [ -f "$CONFIG_FILE" ]; then
     echo "🛡️ config.json yedeklendi."
 fi
 
+sleep 2
+
 # varsa dizini sil
 if [ -d "$MASTER_PATH" ]; then
     echo "Mevcut uygulama dizini siliniyor..."
     sudo rm -rf "$MASTER_PATH"
 fi
 
+sleep 10
+
 while true; do
     echo "GitHub'dan proje klonlanıyor..."
     if git clone https://github.com/EbilgiYazilim/enobet_client.git "$MASTER_PATH"; then
+        sleep 30
         echo "Klonlama başarılı."
         break
     else
@@ -46,6 +51,8 @@ if [ -f "$BACKUP_CONFIG" ]; then
     mv "$BACKUP_CONFIG" "$CONFIG_FILE"
     echo "config.json geri yüklendi."
 fi
+
+sleep 2
 
 sudo chmod -R +x "$MASTER_PATH"
 sudo chmod -R 777 "$MASTER_PATH"
