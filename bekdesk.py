@@ -92,6 +92,27 @@ def ensure_hosts_entry(ad):
         log.writelog("/etc/hosts kontrolunde hata: " + str(e))
 
 
+def ensure_unique_machine_id():
+    # Kiosk cihazları tek imajdan klonlandığı için /etc/machine-id hepsinde aynı olabilir; sunucu
+    # kaydı machine-id'ye göre eşlediğinden ikinci cihaz "zaten kayıtlı" (409) alır. Cihaz başına
+    # BİR KEZ (işaret dosyası) benzersiz machine-id üret. Yalnız kayıtsız cihazda çağrılır.
+    marker = "/home/farma/enobet/.machineid_fixed"
+    if os.path.exists(marker):
+        return
+    try:
+        _run(["sudo", "rm", "-f", "/etc/machine-id", "/var/lib/dbus/machine-id"])
+        if _run(["sudo", "systemd-machine-id-setup"]).returncode != 0:
+            # systemd-machine-id-setup yoksa UUID'den 32 hex yaz.
+            yeni = _run(["cat", "/proc/sys/kernel/random/uuid"]).stdout.decode("utf-8", "ignore")
+            yeni = re.sub(r"[^0-9a-f]", "", yeni.lower())[:32]
+            _run(["sudo", "tee", "/etc/machine-id"], input=(yeni + "\n").encode("utf-8"))
+        _run(["sudo", "dbus-uuidgen", "--ensure"])
+        open(marker, "w").close()
+        log.writelog("machine-id benzersiz olarak yeniden uretildi (klon duzeltmesi).")
+    except Exception as e:
+        log.writelog("machine-id yenilenemedi: " + str(e))
+
+
 def set_hostname(short_code):
     # Konsolda kolay bulunması için sabit, güvenli bir ad: enobet-<shortCode>.
     if not short_code:
@@ -129,6 +150,8 @@ def ensure_agent():
         log.writelog("BEKdesk ajanı kurulamadı.")
         return
 
+    # Kayıttan ÖNCE: klon imajlardan gelen yinelenen machine-id'yi benzersiz yap (bir kez).
+    ensure_unique_machine_id()
     set_hostname(short_code)
     write_env_file()
 
