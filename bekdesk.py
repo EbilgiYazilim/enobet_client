@@ -16,9 +16,8 @@ from helpers import api
 from helpers import db
 from helpers import log
 
-# API/relay (kayıt + /ws/agent) ile indirme ayrı hostlarda: API desk-api, indirme desk (Cloudflare statik).
-SERVER = "https://desk-api.bek.org.tr"
-DEB_URL = "https://desk.bek.org.tr/download/bekdesk-agent-linux.deb"
+SERVER = "https://desk.bek.org.tr"
+DEB_URL = SERVER + "/download/bekdesk-agent-linux.deb"
 DEB_PATH = "/home/farma/enobet/bekdesk-agent.deb"
 # Kiosk X oturumuna (DISPLAY :0, farma kullanıcısı) bağlanabilmesi için ajan servisinin okuduğu ortam dosyası.
 ENV_FILE = "/etc/bek-desk/agent.env"
