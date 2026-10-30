@@ -30,11 +30,35 @@ def set_firefox_homepage():
 
             try:
                 # Her biri ayrı satır; yalnız eksik olanları ekle (her açılışta birikmesin).
+                # Kiosk sağlamlaştırma: Chromium kiosk bayraklarının Firefox karşılıkları.
                 satirlar = [
                     'user_pref("browser.startup.homepage", "https://e-nobet.com/' + shortCode + '");',
                     'user_pref("browser.fullscreen.autohide", true);',
                     'user_pref("browser.fullscreen.animate", false);',
                     'user_pref("toolkit.startup.max_resumed_crashes", -1);',
+                    # Çökme/oturum geri yükleme balonu ve ilk-çalıştırma sayfası kapalı.
+                    'user_pref("browser.sessionstore.resume_from_crash", false);',
+                    'user_pref("browser.shell.checkDefaultBrowser", false);',
+                    'user_pref("browser.startup.homepage_override.mstone", "ignore");',
+                    # Disk + medya önbelleği ~150 MB (akıllı boyut kapalı, sabit kapasite).
+                    'user_pref("browser.cache.disk.enable", true);',
+                    'user_pref("browser.cache.disk.smart_size.enabled", false);',
+                    'user_pref("browser.cache.disk.capacity", 153600);',
+                    'user_pref("media.cache_size", 153600);',
+                    # Parola kaydı, bildirim, hesap senkronu kapalı.
+                    'user_pref("signon.rememberSignons", false);',
+                    'user_pref("dom.webnotifications.enabled", false);',
+                    'user_pref("permissions.default.desktop-notification", 2);',
+                    'user_pref("identity.fxaccounts.enabled", false);',
+                    # Arka plan ağ trafiği: telemetri, prefetch, arama güncellemesi kapalı.
+                    'user_pref("toolkit.telemetry.enabled", false);',
+                    'user_pref("datareporting.healthreport.uploadEnabled", false);',
+                    'user_pref("datareporting.policy.dataSubmissionEnabled", false);',
+                    'user_pref("app.update.enabled", false);',
+                    'user_pref("app.update.auto", false);',
+                    'user_pref("extensions.update.enabled", false);',
+                    'user_pref("network.prefetch-next", false);',
+                    'user_pref("browser.search.update", false);',
                 ]
                 with open(prefs_file, "r", encoding="utf-8", errors="ignore") as f:
                     mevcut = f.read()
@@ -60,7 +84,18 @@ def disable_firefox_updates():
             f.write('''
 {
     "policies": {
-        "DisableAppUpdate": true
+        "DisableAppUpdate": true,
+        "DisableFirefoxAccounts": true,
+        "DisableTelemetry": true,
+        "DisableFirefoxStudies": true,
+        "OfferToSaveLogins": false,
+        "DisablePocket": true,
+        "DontCheckDefaultBrowser": true,
+        "OverrideFirstRunPage": "",
+        "OverridePostUpdatePage": "",
+        "DisableProfileImport": true,
+        "ExtensionUpdate": false,
+        "Permissions": { "Notifications": { "BlockNewRequests": true } }
     }
 }
             ''')
