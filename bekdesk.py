@@ -1,9 +1,12 @@
 #! /usr/bin/python
 # -*- coding: utf-8 -*-
-"""BEKdesk gözetimsiz (unattended) ajan kurulumu. TeamViewer'ın yerini alır.
+"""BEKdesk gözetimsiz (unattended) headless ajan kurulumu. TeamViewer'ın yerini alır.
 
-Akış: token sunucudan alınır (repoda sabit tutulmaz) -> .deb indirilir/kurulur -> `bekdesk agent install`
-ile kaydolur. Zaten kayıtlıysa tekrar kaydetmez. Teknisyen BEKdesk konsolundan parolasız bağlanır.
+Cihaz filosu Ubuntu 16.04 (X11 kiosk) olduğundan, masaüstü (Tauri/webkit) paketi değil, BEK'in
+**headless ajan** paketi (`bekdesk-agent`, GUI/webkit yok, eski glibc uyumlu) kurulur. Akış: token
+sunucudan alınır (repoda sabit tutulmaz) -> .deb indirilir/kurulur -> kiosk X erişimi için ortam dosyası
+yazılır -> `bekdesk-agent install` ile kaydolur ve systemd servisi kurulur. Zaten kayıtlıysa tekrar
+kaydetmez. Teknisyen BEKdesk konsolundan parolasız bağlanır.
 """
 import os
 import re
@@ -14,8 +17,12 @@ from helpers import db
 from helpers import log
 
 SERVER = "https://desk.bek.org.tr"
-DEB_URL = SERVER + "/download/BEKDesk.deb"
-DEB_PATH = "/home/farma/enobet/BEKDesk.deb"
+DEB_URL = SERVER + "/download/bekdesk-agent-linux.deb"
+DEB_PATH = "/home/farma/enobet/bekdesk-agent.deb"
+# Kiosk X oturumuna (DISPLAY :0, farma kullanıcısı) bağlanabilmesi için ajan servisinin okuduğu ortam dosyası.
+ENV_FILE = "/etc/bek-desk/agent.env"
+KIOSK_DISPLAY = ":0"
+KIOSK_XAUTHORITY = "/home/farma/.Xauthority"
 
 
 def _run(cmd, **kw):
@@ -23,26 +30,38 @@ def _run(cmd, **kw):
 
 
 def is_installed():
-    return _run(["which", "bekdesk"]).returncode == 0
+    return _run(["which", "bekdesk-agent"]).returncode == 0
 
 
 def is_enrolled():
     if not is_installed():
         return False
-    # `agent status` kayıt yoksa sıfırdan farklı döner.
-    return _run(["bekdesk", "agent", "status"]).returncode == 0
+    # `status` kayıt yoksa sıfırdan farklı döner.
+    return _run(["bekdesk-agent", "status"]).returncode == 0
 
 
 def install_deb():
-    log.writelog("BEKdesk .deb indiriliyor.")
+    log.writelog("BEKdesk ajanı (.deb) indiriliyor.")
     if _run(["wget", "-q", "-O", DEB_PATH, DEB_URL]).returncode != 0:
-        log.writelog("BEKdesk .deb indirilemedi.")
+        log.writelog("BEKdesk ajanı (.deb) indirilemedi.")
         return False
     # Bağımlılıkları da çözmesi için apt ile kur; dpkg eksik bağımlılıkta patlayabilir.
     if _run(["sudo", "apt-get", "install", "-y", DEB_PATH]).returncode != 0:
         _run(["sudo", "dpkg", "-i", DEB_PATH])
         _run(["sudo", "apt-get", "install", "-f", "-y"])
     return is_installed()
+
+
+def write_env_file():
+    # Ajan servisi gözetimsiz çalışırken kiosk X oturumuna erişmek için DISPLAY/XAUTHORITY'yi bilmeli.
+    # /etc kök yetkisi ister; farma'da parolasız sudo var.
+    icerik = "DISPLAY={}\nXAUTHORITY={}\n".format(KIOSK_DISPLAY, KIOSK_XAUTHORITY)
+    try:
+        p = _run(["sudo", "tee", ENV_FILE], input=icerik.encode("utf-8"))
+        if p.returncode != 0:
+            log.writelog("Ajan ortam dosyası yazılamadı: " + p.stderr.decode("utf-8", "ignore")[:200])
+    except Exception as e:
+        log.writelog("Ajan ortam dosyası yazılırken hata: " + str(e))
 
 
 def set_hostname(short_code):
@@ -77,13 +96,15 @@ def ensure_agent():
         return
 
     if not is_installed() and not install_deb():
-        log.writelog("BEKdesk kurulamadı.")
+        log.writelog("BEKdesk ajanı kurulamadı.")
         return
 
     set_hostname(short_code)
+    write_env_file()
 
     log.writelog("BEKdesk ajanı kaydediliyor.")
-    sonuc = _run(["sudo", "bekdesk", "agent", "install", "--server", SERVER, "--token", token])
+    # `install` hem kaydolur hem systemd servisini kurup başlatır.
+    sonuc = _run(["sudo", "bekdesk-agent", "install", "--server", SERVER, "--token", token])
     if sonuc.returncode == 0:
         log.writelog("BEKdesk ajanı kuruldu.")
     else:
