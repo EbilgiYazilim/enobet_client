@@ -40,10 +40,23 @@ def is_enrolled():
     return _run(["bekdesk-agent", "status"]).returncode == 0
 
 
+def _deb_gecerli():
+    # 0 bayt / bozuk indirme (CDN negatif önbellek, kesik aktarım) kuruluma gitmesin.
+    try:
+        if os.path.getsize(DEB_PATH) < 100000:
+            return False
+        with open(DEB_PATH, "rb") as f:
+            return f.read(8).startswith(b"!<arch>")
+    except OSError:
+        return False
+
+
 def install_deb():
     log.writelog("BEKdesk ajanı (.deb) indiriliyor.")
-    if _run(["wget", "-q", "-O", DEB_PATH, DEB_URL]).returncode != 0:
-        log.writelog("BEKdesk ajanı (.deb) indirilemedi.")
+    # wget HTTP hatasında sıfırdan farklı döner; ama boş gövdeyle 200 gelirse 0 döner → ayrıca boyut/sihir denetle.
+    if _run(["wget", "-q", "-O", DEB_PATH, DEB_URL]).returncode != 0 or not _deb_gecerli():
+        boyut = os.path.getsize(DEB_PATH) if os.path.exists(DEB_PATH) else 0
+        log.writelog("BEKdesk .deb gecersiz/eksik indi (%d bayt); kurulum atlandi, sonra tekrar denenecek." % boyut)
         return False
     # Bağımlılıkları da çözmesi için apt ile kur; dpkg eksik bağımlılıkta patlayabilir.
     if _run(["sudo", "apt-get", "install", "-y", DEB_PATH]).returncode != 0:
