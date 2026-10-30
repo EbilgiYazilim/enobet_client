@@ -12,6 +12,20 @@ TMP_VERSION_JSON="/tmp/enobet_version.json"
 TMP_ZIP="/tmp/enobet_update.zip"
 TMP_EXTRACT="/tmp/enobet_new"
 
+# Canary/override: belirli bir cihaz farklı bir version.json'dan güncellensin (check.py commandId=5 yazar).
+OVERRIDE_URL_FILE="$MASTER_PATH/version_url.txt"
+if [ -s "$OVERRIDE_URL_FILE" ]; then
+  VERSION_JSON_URL="$(tr -d '[:space:]' < "$OVERRIDE_URL_FILE")"
+fi
+
+# Uygulamayı başlatıp çıkar (güncelleme kontrolü başarısızsa ekran boş kalmasın diye fallback).
+basla_ve_cik() {
+  sudo chmod -R +x "$MASTER_PATH" || true
+  sudo chmod -R 777 "$MASTER_PATH" || true
+  python3 /home/farma/enobet/setup.py
+  exit 0
+}
+
 # --- JSON alanı çek (python3 ile) ---
 json_get() {
   local file="$1" key="$2"
@@ -63,8 +77,12 @@ echo "📦 Mevcut versiyon: $CURRENT_VERSION"
 
 # CDN'den version.json çek (wget)
 echo "🌐 Versiyon bilgisi indiriliyor: $VERSION_JSON_URL"
-# -q sessiz, -O çıktı dosyası, --tries ve --waitretry basit retry davranışı
-wget -q --tries=3 --waitretry=3 -O "$TMP_VERSION_JSON" "$VERSION_JSON_URL"
+# -q sessiz, -O çıktı dosyası, --tries ve --waitretry basit retry davranışı.
+# Başarısızsa güncelleme atlanır ama uygulama mevcut sürümle başlatılır (ekran boş kalmaz).
+if ! wget -q --tries=3 --waitretry=3 -O "$TMP_VERSION_JSON" "$VERSION_JSON_URL"; then
+  echo "❌ Versiyon bilgisi alınamadı; mevcut sürümle başlatılıyor."
+  basla_ve_cik
+fi
 
 REMOTE_VERSION_STR="$(json_get "$TMP_VERSION_JSON" "version")"
 ZIP_URL="$(json_get "$TMP_VERSION_JSON" "zip_url")"

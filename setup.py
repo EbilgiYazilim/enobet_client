@@ -9,6 +9,7 @@ import subprocess
 from helpers import api
 from helpers import log
 from helpers import db
+import bekdesk
 
 MASTER_PATH = "/home/farma/enobet/"
 CONFIG_INI_PATH = "/home/farma/nobet_ekran/config.ini"
@@ -61,6 +62,12 @@ def main():
 
         crontab_process()
         set_resolution_for_all_displays()
+
+        # Uzaktan destek: BEKdesk gözetimsiz ajanını kur/doğrula (config varsa; idempotent).
+        try:
+            bekdesk.ensure_agent()
+        except Exception as e:
+            log.writelog("BEKdesk ensure_agent hata: " + str(e))
 
         if is_firefox_running():
             return

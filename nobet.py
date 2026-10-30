@@ -7,8 +7,8 @@ import time
 from helpers import db
 from helpers import log
 
-config = db.read_config_json()
-shortCode = config.get("shortCode")
+config = db.read_config_json() or {}
+shortCode = config.get("shortCode") or ""
 
 
 def set_firefox_homepage():
@@ -25,16 +25,24 @@ def set_firefox_homepage():
             prefs_file = os.path.join(profile_dir, folder, "prefs.js")
 
             if not os.path.exists(prefs_file):
-                log.writelog("prefs.js file not found in {prefs_file}. Skipping.")
+                log.writelog("prefs.js file not found in " + prefs_file + ". Skipping.")
                 continue
 
             try:
-                with open(prefs_file, "a") as f:
-                    # Homepage ayarlarını ekle
-                    f.write('user_pref("browser.startup.homepage", "https://e-nobet.com/' + shortCode + '");')
-                    f.write('user_pref("browser.fullscreen.autohide", true);\n')
-                    f.write('user_pref("browser.fullscreen.animate", false);\n')
-                    f.write('user_pref("toolkit.startup.max_resumed_crashes", -1);\n')
+                # Her biri ayrı satır; yalnız eksik olanları ekle (her açılışta birikmesin).
+                satirlar = [
+                    'user_pref("browser.startup.homepage", "https://e-nobet.com/' + shortCode + '");',
+                    'user_pref("browser.fullscreen.autohide", true);',
+                    'user_pref("browser.fullscreen.animate", false);',
+                    'user_pref("toolkit.startup.max_resumed_crashes", -1);',
+                ]
+                with open(prefs_file, "r", encoding="utf-8", errors="ignore") as f:
+                    mevcut = f.read()
+                eksik = [s for s in satirlar if s not in mevcut]
+                if eksik:
+                    with open(prefs_file, "a", encoding="utf-8") as f:
+                        for s in eksik:
+                            f.write(s + "\n")
                 log.writelog("Firefox homepage set successfully.")
             except Exception as e:
                 log.writelog("Error writing to prefs.js: " + str(e))
