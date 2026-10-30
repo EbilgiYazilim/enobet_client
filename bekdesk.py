@@ -92,25 +92,37 @@ def ensure_hosts_entry(ad):
         log.writelog("/etc/hosts kontrolunde hata: " + str(e))
 
 
-def ensure_unique_machine_id():
+def _client_code_to_machine_id(client_code):
+    # /etc/machine-id biçimi: tam 32 küçük harf hex. clientCode sunucuda Cihaz_Id = GUID olduğundan
+    # tireleri atıp küçük harfe çevirince tam 32 hex olur → doğrudan machine-id olarak kullanılabilir.
+    h = re.sub(r"[^0-9a-fA-F]", "", str(client_code or "")).lower()
+    return h if len(h) == 32 else ""
+
+
+def set_machine_id_from_client(client_code):
     # Kiosk cihazları tek imajdan klonlandığı için /etc/machine-id hepsinde aynı olabilir; sunucu
-    # kaydı machine-id'ye göre eşlediğinden ikinci cihaz "zaten kayıtlı" (409) alır. Cihaz başına
-    # BİR KEZ (işaret dosyası) benzersiz machine-id üret. Yalnız kayıtsız cihazda çağrılır.
-    marker = "/home/farma/enobet/.machineid_fixed"
-    if os.path.exists(marker):
+    # kaydı machine-id'ye göre eşlediğinden ikinci cihaz "zaten kayıtlı" (409) alır. Rastgele üretmek
+    # yerine cihazın ZATEN benzersiz kimliği olan clientCode'u (GUID) machine-id yaparız: hem benzersiz
+    # hem DETERMİNİSTİK — imaj/kimlik silinse bile aynı id üretilir (sunucuda hayalet cihaz oluşmaz) ve
+    # bek-desk machine-id'si ile e-nobet Cihaz_Id'si birebir eşleşir. Yalnız kayıtsız cihazda çağrılır.
+    mid = _client_code_to_machine_id(client_code)
+    if not mid:
+        log.writelog("clientCode GUID'den machine-id uretilemedi; atlandi.")
         return
     try:
-        _run(["sudo", "rm", "-f", "/etc/machine-id", "/var/lib/dbus/machine-id"])
-        if _run(["sudo", "systemd-machine-id-setup"]).returncode != 0:
-            # systemd-machine-id-setup yoksa UUID'den 32 hex yaz.
-            yeni = _run(["cat", "/proc/sys/kernel/random/uuid"]).stdout.decode("utf-8", "ignore")
-            yeni = re.sub(r"[^0-9a-f]", "", yeni.lower())[:32]
-            _run(["sudo", "tee", "/etc/machine-id"], input=(yeni + "\n").encode("utf-8"))
+        mevcut = ""
+        if os.path.exists("/etc/machine-id"):
+            with open("/etc/machine-id", "r", encoding="utf-8", errors="ignore") as f:
+                mevcut = f.read().strip()
+        if mevcut == mid:
+            return  # zaten doğru; gereksiz yazma/churn yok.
+        _run(["sudo", "rm", "-f", "/var/lib/dbus/machine-id"])
+        _run(["sudo", "tee", "/etc/machine-id"], input=(mid + "\n").encode("utf-8"))
+        # dbus makine kimliğini /etc/machine-id'den tazele (varsa oradan kopyalar).
         _run(["sudo", "dbus-uuidgen", "--ensure"])
-        open(marker, "w").close()
-        log.writelog("machine-id benzersiz olarak yeniden uretildi (klon duzeltmesi).")
+        log.writelog("machine-id clientCode'dan ayarlandi (klon duzeltmesi).")
     except Exception as e:
-        log.writelog("machine-id yenilenemedi: " + str(e))
+        log.writelog("machine-id ayarlanamadi: " + str(e))
 
 
 def set_hostname(short_code):
@@ -150,8 +162,8 @@ def ensure_agent():
         log.writelog("BEKdesk ajanı kurulamadı.")
         return
 
-    # Kayıttan ÖNCE: klon imajlardan gelen yinelenen machine-id'yi benzersiz yap (bir kez).
-    ensure_unique_machine_id()
+    # Kayıttan ÖNCE: machine-id'yi cihazın benzersiz clientCode'undan (GUID) deterministik olarak ayarla.
+    set_machine_id_from_client(client_code)
     set_hostname(short_code)
     write_env_file()
 
