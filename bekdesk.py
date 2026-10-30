@@ -64,6 +64,21 @@ def write_env_file():
         log.writelog("Ajan ortam dosyası yazılırken hata: " + str(e))
 
 
+def ensure_hosts_entry(ad):
+    # hostnamectl /etc/hosts'u güncellemez; 127.0.1.1 <ad> yoksa ekle. Yoksa ad çözümlemesi (getaddrinfo)
+    # takılır ve ajan `error sending request` ile kayıt olamaz (manuel testte yaşandı).
+    try:
+        with open("/etc/hosts", "r", encoding="utf-8", errors="ignore") as f:
+            mevcut = f.read()
+        if ("127.0.1.1 " + ad) in mevcut:
+            return
+        p = _run(["sudo", "tee", "-a", "/etc/hosts"], input=("127.0.1.1 " + ad + "\n").encode("utf-8"))
+        if p.returncode != 0:
+            log.writelog("/etc/hosts guncellenemedi: " + p.stderr.decode("utf-8", "ignore")[:200])
+    except Exception as e:
+        log.writelog("/etc/hosts kontrolunde hata: " + str(e))
+
+
 def set_hostname(short_code):
     # Konsolda kolay bulunması için sabit, güvenli bir ad: enobet-<shortCode>.
     if not short_code:
@@ -74,6 +89,8 @@ def set_hostname(short_code):
         if mevcut != ad:
             _run(["sudo", "hostnamectl", "set-hostname", ad])
             log.writelog("Hostname ayarlandı: " + ad)
+        # Ad değişmese de /etc/hosts satırını garanti et (eski kurulumlarda eksik olabilir).
+        ensure_hosts_entry(ad)
     except Exception as e:
         log.writelog("Hostname ayarlanamadı: " + str(e))
 
