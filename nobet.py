@@ -1,6 +1,7 @@
 #! /usr/bin/python
 # -*- coding: utf-8 -*-
 import os
+import shutil
 import subprocess
 import time
 
@@ -38,6 +39,11 @@ def set_firefox_homepage():
                     'user_pref("toolkit.startup.max_resumed_crashes", -1);',
                     # Çökme/oturum geri yükleme balonu ve ilk-çalıştırma sayfası kapalı.
                     'user_pref("browser.sessionstore.resume_from_crash", false);',
+                    # Oturum geri yükleme tamamen kapalı: açılışta eski sekmeler geri gelmesin,
+                    # kiosk URL'inin üstüne çift sekme oluşmasın. (startup.page 0 = boş; kiosk URL yine açılır)
+                    'user_pref("browser.startup.page", 0);',
+                    'user_pref("browser.sessionstore.max_resumed_crashes", 0);',
+                    'user_pref("browser.sessionstore.resume_session_once", false);',
                     'user_pref("browser.shell.checkDefaultBrowser", false);',
                     'user_pref("browser.startup.homepage_override.mstone", "ignore");',
                     # Disk + medya önbelleği ~150 MB (akıllı boyut kapalı, sabit kapasite).
@@ -106,6 +112,35 @@ def disable_firefox_updates():
         log.writelog("Error creating policies.json: " + str(e))
 
 
+def clear_firefox_session():
+    # Açılıştan önce önceki (çoğu zaman temiz olmayan) kapanıştan kalan oturumu sil.
+    # pkill/güç kesintisi sonrası Firefox sekmeleri sessionstore'a yazar; sonraki açılışta
+    # bunları geri yükler VE komut satırındaki kiosk URL'ini de açar -> çift sekme.
+    # Bu dosyaları silince her boot'ta tek sekme garantilenir (prefs ile birlikte çift koruma).
+    profile_dir = os.path.expanduser("~/.mozilla/firefox")
+    if not os.path.exists(profile_dir):
+        return
+    hedef_dosyalar = ["sessionstore.jsonlz4", "sessionCheckpoints.json", "recovery.jsonlz4"]
+    for folder in os.listdir(profile_dir):
+        if folder.endswith(".default") or folder.endswith(".default-release"):
+            prof = os.path.join(profile_dir, folder)
+            for ad in hedef_dosyalar:
+                try:
+                    yol = os.path.join(prof, ad)
+                    if os.path.exists(yol):
+                        os.remove(yol)
+                except Exception as e:
+                    log.writelog("Oturum dosyasi silinemedi (" + ad + "): " + str(e))
+            try:
+                yedek = os.path.join(prof, "sessionstore-backups")
+                if os.path.isdir(yedek):
+                    shutil.rmtree(yedek, ignore_errors=True)
+            except Exception as e:
+                log.writelog("sessionstore-backups silinemedi: " + str(e))
+            break  # İlk uygun profil (set_firefox_homepage ile aynı seçim).
+    log.writelog("Firefox oturumu temizlendi (cift sekme onleme).")
+
+
 def open_firefox_fullscreen():
     # Firefox'u tam ekran olarak açma
     try:
@@ -115,6 +150,7 @@ def open_firefox_fullscreen():
         subprocess.Popen(["xset", "s", "noblank"])
         subprocess.Popen(["sudo", "/home/farma/enobet/mirdsp.sh"])
         #subprocess.Popen(["xrandr", "--output", "VGA-1", "--same-as", "HDMI-1"])
+        clear_firefox_session()  # çift sekme önleme: kalan oturumu sil, sonra tek sekme aç
         subprocess.Popen(["firefox", "--kiosk", "https://e-nobet.com/" + shortCode])
         log.writelog("Firefox opened in fullscreen (kiosk) mode.")
     except Exception as e:
