@@ -44,6 +44,9 @@ def set_firefox_homepage():
                     'user_pref("browser.startup.page", 0);',
                     'user_pref("browser.sessionstore.max_resumed_crashes", 0);',
                     'user_pref("browser.sessionstore.resume_session_once", false);',
+                    # Geçmiş: "Never remember history" = kalıcı gizli mod. Oturum/geçmiş hiç kaydolmaz;
+                    # çift sekme fix'ini de pekiştirir. Not: disk cache ve bazı service worker'lar devre dışı kalabilir.
+                    'user_pref("browser.privatebrowsing.autostart", true);',
                     'user_pref("browser.shell.checkDefaultBrowser", false);',
                     'user_pref("browser.startup.homepage_override.mstone", "ignore");',
                     # Disk + medya önbelleği ~150 MB (akıllı boyut kapalı, sabit kapasite).
