@@ -115,6 +115,73 @@ def disable_firefox_updates():
         log.writelog("Error creating policies.json: " + str(e))
 
 
+def disable_crash_reporter():
+    # Ubuntu apport ("System program problem detected" / "Linux system report") penceresi
+    # bir program cokunce /var/crash altina dosya yazip acilista bu diyalogu kiosk ekranin
+    # ONUNE getiriyordu. Servisi tamamen kapat, otomatik raporu kapat, bekleyen raporlari
+    # sil ve o an acik bir diyalog varsa oldur -> bu pencere bir daha hic cikmasin.
+    komutlar = [
+        ["sudo", "systemctl", "stop", "apport.service"],
+        ["sudo", "systemctl", "disable", "apport.service"],
+        ["sudo", "systemctl", "mask", "apport.service"],
+        # /etc/default/apport -> enabled=0 (root gerektirir; sudo tee ile yaz).
+        ["sudo", "bash", "-c", "echo enabled=0 > /etc/default/apport"],
+        # Bekleyen cokme raporlarini temizle (yoksa sorun degil).
+        ["sudo", "bash", "-c", "rm -f /var/crash/*"],
+        # Bu boot'ta hali hazirda acik olan apport diyalogunu kapat.
+        ["pkill", "-f", "apport"],
+    ]
+    for komut in komutlar:
+        try:
+            subprocess.call(komut)
+        except Exception as e:
+            log.writelog("apport kapatma adimi basarisiz (" + " ".join(komut) + "): " + str(e))
+    log.writelog("apport (cokme raporlayici) devre disi birakildi.")
+
+
+def enable_firefox_always_on_top():
+    # Apport disinda baska bir uyari penceresi cikarsa (guncelleme, hata diyalogu) kiosk
+    # Firefox'un arkasinda kalsin diye openbox'a "Firefox her zaman en ustte" kurali ekle.
+    # Idempotent: ayni kural iki kez eklenmez. Hata halinde sessizce gec, Firefox yine acilir.
+    rc = os.path.expanduser("~/.config/openbox/rc.xml")
+    if not os.path.exists(rc):
+        log.writelog("openbox rc.xml bulunamadi, always-on-top atlandi: " + rc)
+        return
+    try:
+        with open(rc, "r", encoding="utf-8", errors="ignore") as f:
+            icerik = f.read()
+        if "e-nobet-firefox-ontop" in icerik:
+            return  # kural zaten mevcut
+        kural = (
+            "    <!-- e-nobet-firefox-ontop: kiosk Firefox her zaman en ustte -->\n"
+            "    <application class=\"*irefox*\">\n"
+            "      <focus>yes</focus>\n"
+            "      <layer>above</layer>\n"
+            "      <fullscreen>yes</fullscreen>\n"
+            "    </application>\n"
+        )
+        if "</applications>" in icerik:
+            icerik = icerik.replace("</applications>", kural + "  </applications>", 1)
+        elif "</openbox_config>" in icerik:
+            icerik = icerik.replace(
+                "</openbox_config>",
+                "  <applications>\n" + kural + "  </applications>\n</openbox_config>",
+                1,
+            )
+        else:
+            icerik = icerik + "\n  <applications>\n" + kural + "  </applications>\n"
+        with open(rc, "w", encoding="utf-8") as f:
+            f.write(icerik)
+        # Calisan openbox'a kurali hemen yeniden yuklet (DISPLAY yoksa sonraki boot'ta etkin olur).
+        try:
+            subprocess.call(["openbox", "--reconfigure"])
+        except Exception:
+            pass
+        log.writelog("Firefox always-on-top openbox kurali eklendi.")
+    except Exception as e:
+        log.writelog("always-on-top kurali eklenemedi: " + str(e))
+
+
 def clear_firefox_session():
     # Açılıştan önce önceki (çoğu zaman temiz olmayan) kapanıştan kalan oturumu sil.
     # pkill/güç kesintisi sonrası Firefox sekmeleri sessionstore'a yazar; sonraki açılışta
@@ -165,4 +232,6 @@ if __name__ == "__main__":
     # Set homepage, disable updates, and open Firefox fullscreen
     set_firefox_homepage()  # Uncomment to enable homepage set
     disable_firefox_updates()  # Uncomment to disable updates
+    disable_crash_reporter()  # apport "Linux system report" penceresini kalici kapat
+    enable_firefox_always_on_top()  # Firefox'u her zaman en ustte tut (uyari pencereleri arkada kalsin)
     open_firefox_fullscreen()  # Uncomment to open Firefox in fullscreen mode
